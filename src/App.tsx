@@ -1,15 +1,16 @@
 import React from 'react';
-import Popup from './components/popup';
-import Login from './components/login';
-import Main from './components/main';
+import Popup from './components/popups/popup';
+import Board from './components/board';
 
 function App() {
-  return <>
-        <Main/>
-        <Popup display={'none'}>
-            <Login/>
-        </Popup>
-    </>
+    if (localStorage.getItem('username')) {
+        return <Board />
+    }
+
+    return <>
+            <Board/>
+            <Popup/>
+        </>
 }
 
 export default App;
