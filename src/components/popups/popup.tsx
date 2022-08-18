@@ -1,13 +1,14 @@
 import React, {useState} from "react";
 import styled from "styled-components";
 
-export const PopupContainer = styled.div<{display: boolean | null | undefined}>`
+export const PopupContainer = styled.div<{display: boolean}>`
     width:100%;
     min-height:100%;
     background-color: rgba(0,0,0,0.5);
-    overflow:hidden;
+    overflow:scroll;
     position:fixed;
     top:0px;
+    left: 0px;
     display: ${props => props.display ? 'block' : 'none'};
 `
 
@@ -64,7 +65,7 @@ export default function Popup () {
         <PopupContent>
             <form>
                 <H2>Пожалуйста, введите ваше имя</H2>
-                <Input value={name} onChange={(e) => changeHandler(e)} type='text'/>
+                <Input value={name} onBlur={(e) => changeHandler(e)} type='text'/>
                 <Button onClick={(e) => handleClick(e)}>OK</Button>
             </form>
         </PopupContent>

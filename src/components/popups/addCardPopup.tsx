@@ -1,6 +1,8 @@
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import { PopupContainer, PopupContent } from "../popups/popup"
 import styled from 'styled-components';
+import useEscape from '../../hooks/useEscape';
+import { useClickOutside } from "../../hooks/useClickOutside";
 
 
 let Title = styled.input`
@@ -40,12 +42,25 @@ let Button = styled.button`
     align-self: flex-end;
 `
 
+let CloseButton = styled.button`
+    width: 20px;
+    border-radius: 5px;
+    background-color: transparent;
+    border: 0;
+    &:hover {
+        transform: scale(1.4);
+    }
+    position: absolute;
+    right: 604px;
+`
+
 interface AddCardPopupProps {
     clickHandler: (e: React.SyntheticEvent, title: string, text: string, status: string) => void,
-    titles: string[]
+    initialTitles: string[],
+    closePopup: () => void
 }
 
-export default function AddCardPopup ({clickHandler, titles}: AddCardPopupProps) {
+export default function AddCardPopup ({clickHandler, initialTitles, closePopup}: AddCardPopupProps) {
 
     let [title, setTitle] = useState('');
     let [text, setText] = useState('');
@@ -67,19 +82,26 @@ export default function AddCardPopup ({clickHandler, titles}: AddCardPopupProps)
     let handleClick = (e: React.SyntheticEvent) => {
         clickHandler(e, title, text, status);
         setTitle('');
-            setText('');
-            setStatus('0');
+        setText('');
+        setStatus('0');
     }
+
+    useEscape(() => closePopup());
+
+    let ref = useRef(null);
+    useClickOutside(ref, closePopup);
 
 
     return <PopupContainer display>
-        <PopupContent>
+        <PopupContent ref={ref}>
+            <CloseButton onClick={closePopup}>X</CloseButton>
+            <h3>Add new card</h3>
             <Form>
                 <Title type='text' placeholder='Title' value={title} onChange={(e) => changeTitle(e)} />
                 <Text placeholder='Text' value={text} onChange={(e) => changeText(e)} />
                 <Select name='select' value={status} onChange={changeStatus}>
-                    { titles.map((title, i) => (
-                        <option value={i}>{title}</option>
+                    { initialTitles.map((title, i) => (
+                        <option key={i} value={i}>{title}</option>
                     )) }
                 </Select>
                 <Button onClick={handleClick}>Add</Button>

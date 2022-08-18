@@ -8,14 +8,12 @@ export const useClickOutside = <T extends HTMLElement = HTMLElement>(
 ) => {
   useEffect(() => {
     const listener = (event: Event) => {
-      console.log(ref);
-      console.log(event.target);
-      console.log(handler);
       const el = ref?.current;
       if (!el || el.contains((event?.target as Node) || null)) {
+          console.log(event.target);
         return;
       }
-
+      console.log(event.target);
       handler(event);
     };
 

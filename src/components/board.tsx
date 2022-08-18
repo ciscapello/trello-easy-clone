@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Column, { ICard } from './column';
+import Column, { ICard, IComment } from './column';
 import { v4 as uuidv4 } from 'uuid';
 import AddCardPopup from './popups/addCardPopup';
 
@@ -14,12 +14,54 @@ let StyledBoard = styled.div`
 
 export default function Board () {
 
-    let titles = ['TODO', 'In Progress', 'Testing', 'Done'];
+    let initialTitles = ['TODO', 'In Progress', 'Testing', 'Done'];
 
     let [isShow, setIsShow] = useState(false);
 
-
     let [cards, setCards] = useState(initialCards);
+
+    let updateCard = (newCard: ICard) => {
+        let newArr = cards.map((card) => {
+            if (card.id === newCard.id) {
+                return {
+                    id: card.id,
+                    title: newCard.title,
+                    text: newCard.text,
+                    author: card.author,
+                    status: newCard.status,
+                    comments: card.comments
+                }
+            }
+            return card
+        });
+        setCards(newArr);
+    }
+
+    let deleteCard = (id: string) => {
+        let newArr = cards.filter((card) => card.id !== id);
+        setCards(newArr);
+    }
+
+    let deleteComment = (card: ICard, newComments: IComment[]) => {
+        let newArr = cards.map((elem) => {
+            if (elem.id === card.id) {
+                return { ...elem, comments: newComments};
+            }
+            return elem;
+        })
+        setCards(newArr);
+    }
+
+    let addComment = (newComment: IComment, id: string) => {
+        let newArr = cards.map((card) => {
+            if (card.id === id) {
+                card.comments.push(newComment);
+                console.log(card.comments);
+            }
+            return card
+        });
+        setCards(newArr);
+    }
 
     
     let clickHandler = (e: React.SyntheticEvent, title: string, text: string, status: string) => {
@@ -30,11 +72,11 @@ export default function Board () {
                 title: title,
                 text: text,
                 author: localStorage.getItem('username'),
-                status: Number(status)
+                status: Number(status),
+                comments: []
             }
             setCards([...cards, newCard])
             setIsShow(false);
-            
         }
     }
 
@@ -42,18 +84,32 @@ export default function Board () {
         setIsShow(true);
     }
 
+    let closePopup = () => {
+        setIsShow(false);
+    }
+
 
     return  <>
         <StyledBoard>
-            { titles.map((title, i) => (
+            { initialTitles.map((title, i) => (
                 <Column 
+                    deleteComment={deleteComment}
+                    deleteCard={deleteCard}
+                    initialTitles={initialTitles}
+                    addComment={addComment}
+                    updateCard={updateCard}
                     key={uuidv4()} 
-                    title={title} 
+                    title={title}
+                    id={i}
                     cards={cards.filter((card) => card.status === i)}
                     openPopup={openPopup} />
             )) }
         </StyledBoard>
-        { isShow ? <AddCardPopup titles={titles} clickHandler={clickHandler} /> : null }
+        { isShow ? <AddCardPopup 
+            initialTitles={initialTitles}
+            clickHandler={clickHandler}
+            closePopup={closePopup}
+        /> : null }
     </>
 }
 
@@ -83,13 +139,15 @@ let initialCards = [
         title: 'И еще одна карточка',
         text: 'Создать принципиально новую карточку',
         author: localStorage.getItem('username'),
-        status: 2
+        status: 2,
+        comments: []
     },
     {
         id: uuidv4(),
         title: 'Новая',
         text: 'Совершенно новая карточка, еще одна',
         author: localStorage.getItem('username'),
-        status: 0
+        status: 0,
+        comments: []
     }
 ]

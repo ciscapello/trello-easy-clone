@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import CardPopup from "./popups/cardPopup";
 
 let StyledColumn = styled.div`
     width: 300px;
@@ -33,6 +34,9 @@ let Button = styled.button`
     border-radius: 5px;
     font-weight: 600;
     font-size: 16px;
+    &:hover {
+        transform: translateX(-2px) translateY(-2px);
+    }
 `
 
 let Card = styled.div`
@@ -45,6 +49,9 @@ let Card = styled.div`
     padding: 5px;
     display: flex;
     flex-direction: column;
+    &:hover {
+        background: lightgray;
+    }
 `
 
 let Title = styled.h4`
@@ -57,6 +64,9 @@ let Author = styled.small`
 
 let Comments = styled.h5`
     margin-top: 0px;
+    color: gray;
+    align-self: center;
+    margin: auto 0;
 `
 
 export interface ICard {
@@ -65,45 +75,68 @@ export interface ICard {
     text: string,
     author: string | null,
     status: number,
-    comments?: IComment[]
+    comments: IComment[]
 }
 
-interface IComment {
+export interface IComment {
     id: string,
     author: string | null,
     text: string
 }
 
 interface ColumnProps {
+    deleteCard: (id: string) => void,
     title: string,
     cards: ICard[],
-    openPopup: () => void
+    openPopup: () => void,
+    initialTitles: string[],
+    updateCard: (newCard: ICard) => void
+    addComment: (newComment: IComment, id: string) => void,
+    id: number,
+    deleteComment: (card: ICard, newComments: IComment[]) => void
 }
 
-export default function Column ({title, cards, openPopup}: ColumnProps) {
+export default function Column (
+    {title, cards, openPopup, initialTitles, updateCard, addComment, deleteCard, id, deleteComment}: ColumnProps
+    ) {
 
     let [showCard, setShowCard] = useState(false);
 
+
+
     let openCard = () => {
-        
+        console.log(showCard);
+        setShowCard(true);
     }
 
+    let closeCard = () => {
+        console.log(showCard);
+        setShowCard(false);
+    }
 
     return <StyledColumn>
-        <Input defaultValue={title}/>
+        <Input defaultValue={title}  />
         <hr/>
         { cards.map((card) => (
             <Card key={card.id}
                 onClick={openCard}
                 >
                 <Title>{card.title}</Title>
-                <Comments>{ card.comments ? `${card.comments.length} comments` : 'Have no comments' }</Comments>
                 <p> {card.text} </p>
+                <Comments>{ card.comments ? `${card.comments.length} comments` : 'Have no comments' }</Comments>
                 <Author> {card.author} </Author>
+                { showCard ? <CardPopup
+                    deleteComment={deleteComment}
+                    deleteCard={deleteCard}
+                    addComment={addComment}
+                    closeCard={closeCard} 
+                    titles={initialTitles} 
+                    card={card} 
+                    updateCard={updateCard}
+                    /> : null }
             </Card>
         )) }
         <Button onClick={openPopup}>Add new card</Button>
-        
     </StyledColumn>
 }
 
