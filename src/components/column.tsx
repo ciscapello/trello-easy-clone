@@ -5,6 +5,7 @@ import CardPopup from "./popups/cardPopup";
 let StyledColumn = styled.div`
     width: 300px;
     display: flex;
+    height: 100%;
     flex-direction: column;
     align-items: center;
     border: 1px solid black;
@@ -86,56 +87,65 @@ export interface IComment {
 
 interface ColumnProps {
     deleteCard: (id: string) => void,
-    title: string,
     cards: ICard[],
     openPopup: () => void,
-    initialTitles: string[],
     updateCard: (newCard: ICard) => void
     addComment: (newComment: IComment, id: string) => void,
     id: number,
-    deleteComment: (card: ICard, newComments: IComment[]) => void
+    deleteComment: (card: ICard, newComments: IComment[]) => void,
+    titleUpdate: (id: number, e: {target: HTMLInputElement}) => void,
+    titles: string[],
+    showCard: boolean,
+    open: () => void,
+    close: () => void
 }
 
-export default function Column (
-    {title, cards, openPopup, initialTitles, updateCard, addComment, deleteCard, id, deleteComment}: ColumnProps
+export default function Column ( { cards, openPopup, updateCard, titles, showCard, open, close,
+    addComment, deleteCard, titleUpdate, id, deleteComment}: ColumnProps
     ) {
 
-    let [showCard, setShowCard] = useState(false);
-
-
-
-    let openCard = () => {
-        console.log(showCard);
-        setShowCard(true);
+    let [cardState, setCardState] = useState<ICard | undefined>()
+    
+    let changeHandler = (e: {target: HTMLInputElement}) => {
+        titleUpdate(id, e);
+    }
+    
+    let openCard = (card: ICard) => {
+        open();
+        setCardState(card);
     }
 
     let closeCard = () => {
-        console.log(showCard);
-        setShowCard(false);
+        close();
+        setCardState(undefined);
     }
 
     return <StyledColumn>
-        <Input defaultValue={title}  />
+        <Input defaultValue={titles[id]} onBlur={(e) => changeHandler(e)} />
         <hr/>
-        { cards.map((card) => (
+        { cards.map((card, i) => (
             <Card key={card.id}
-                onClick={openCard}
-                >
+                onClick={() => {
+                    openCard(card);
+                }}
+            >
                 <Title>{card.title}</Title>
                 <p> {card.text} </p>
                 <Comments>{ card.comments ? `${card.comments.length} comments` : 'Have no comments' }</Comments>
                 <Author> {card.author} </Author>
-                { showCard ? <CardPopup
-                    deleteComment={deleteComment}
-                    deleteCard={deleteCard}
-                    addComment={addComment}
-                    closeCard={closeCard} 
-                    titles={initialTitles} 
-                    card={card} 
-                    updateCard={updateCard}
-                    /> : null }
             </Card>
         )) }
+        { showCard && cardState ? <CardPopup
+            deleteComment={deleteComment}
+            deleteCard={deleteCard}
+            addComment={addComment}
+            closeCard={closeCard}
+            titles={titles}
+            id={id}
+            card={cardState}
+            updateCard={updateCard}
+        /> : null }
+        
         <Button onClick={openPopup}>Add new card</Button>
     </StyledColumn>
 }

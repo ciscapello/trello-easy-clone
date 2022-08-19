@@ -98,11 +98,13 @@ interface CardPopupProps {
     updateCard: (newCard: ICard) => void,
     addComment: (newComment: IComment, id: string) => void,
     deleteCard: (id: string) => void,
-    deleteComment: (card: ICard, newComments: IComment[]) => void
+    deleteComment: (card: ICard, newComments: IComment[]) => void,
+    id: number
 }
 
 export default function CardPopup(
-    { card, titles, closeCard, updateCard, addComment, deleteCard, deleteComment }: CardPopupProps
+    { card, titles, closeCard, updateCard, addComment, 
+    deleteCard, deleteComment, id}: CardPopupProps
     ) {
     
     useEscape(() => closeCard());
@@ -133,7 +135,6 @@ export default function CardPopup(
         clickHandler(e);
     }
     
-
     let update = () => {
         let newCard: ICard = {
             id: card.id,
@@ -159,24 +160,23 @@ export default function CardPopup(
                 <br/>
                 <Form>
                     <Delete type='button' onClick={(e) => deleteHandler(e)}>Delete card</Delete>
-                    <Input value={title} onChange={(e) => changeTitle(e)}  />
-                    <Textarea value={text} onChange={(e) => changeText(e)}/>
-                    <Select value={status} onChange={(e) => changeStatus(e)} >
+                    <Input defaultValue={card.title} onChange={(e) => changeTitle(e)}  />
+                    <Textarea defaultValue={card.text} onChange={(e) => changeText(e)}/>
+                    <Select defaultValue={id} onChange={(e) => changeStatus(e)} >
                         { titles.map((title, i) => (
                             <option key={i} value={i}>{title}</option>
                         )) }
                     </Select>
-                    
                     <Button type='button' onClick={update}>Add changes</Button>
                 </Form>
                 <hr/>
-            </Container>           
+            </Container>
             <CardComments
-                    deleteComment={deleteComment}
-                    card={card}
-                    comments={card.comments}
-                    id={card.id}
-                    addComment={addComment}
+                deleteComment={deleteComment}
+                card={card}
+                comments={card.comments}
+                id={card.id}
+                addComment={addComment}
             /> 
         </StyledPopupContent>
     </PopupContainer>

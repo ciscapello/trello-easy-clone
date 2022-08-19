@@ -16,6 +16,18 @@ export default function Board () {
 
     let initialTitles = ['TODO', 'In Progress', 'Testing', 'Done'];
 
+    let [titles, setTitles] = useState(initialTitles);
+
+    let titleUpdate = (id: number, e: {target: HTMLInputElement}) => {
+        let newArr = titles.map((title, i) => {
+            if (i === id) {
+                return title = e.target.value;
+            }
+            return title;
+        })
+        setTitles(newArr);
+    }
+
     let [isShow, setIsShow] = useState(false);
 
     let [cards, setCards] = useState(initialCards);
@@ -88,25 +100,37 @@ export default function Board () {
         setIsShow(false);
     }
 
+    let [showCard, setShowCard] = useState(true);
+
+    let open = () => {
+        setShowCard(true);
+    }
+
+    let close = () => {
+        setShowCard(false);
+    }
 
     return  <>
         <StyledBoard>
             { initialTitles.map((title, i) => (
-                <Column 
+                <Column
+                    showCard={showCard}
+                    open={open}
+                    close={close}
+                    titles={titles}
+                    titleUpdate={titleUpdate}
                     deleteComment={deleteComment}
                     deleteCard={deleteCard}
-                    initialTitles={initialTitles}
                     addComment={addComment}
                     updateCard={updateCard}
                     key={uuidv4()} 
-                    title={title}
                     id={i}
                     cards={cards.filter((card) => card.status === i)}
                     openPopup={openPopup} />
             )) }
         </StyledBoard>
         { isShow ? <AddCardPopup 
-            initialTitles={initialTitles}
+            titles={titles}
             clickHandler={clickHandler}
             closePopup={closePopup}
         /> : null }
@@ -144,8 +168,32 @@ let initialCards = [
     },
     {
         id: uuidv4(),
-        title: 'Новая',
-        text: 'Совершенно новая карточка, еще одна',
+        title: '1',
+        text: '1111111111',
+        author: localStorage.getItem('username'),
+        status: 0,
+        comments: []
+    },
+    {
+        id: uuidv4(),
+        title: '2',
+        text: '2222222',
+        author: localStorage.getItem('username'),
+        status: 0,
+        comments: []
+    },
+    {
+        id: uuidv4(),
+        title: '3',
+        text: '333333',
+        author: localStorage.getItem('username'),
+        status: 0,
+        comments: []
+    },
+    {
+        id: uuidv4(),
+        title: '4',
+        text: '44444444',
         author: localStorage.getItem('username'),
         status: 0,
         comments: []

@@ -18,7 +18,7 @@ let Comment = styled.div`
 
 let Author = styled.h4`
     margin-top: 0;
-    margin-bottom: 5px;
+    margin-bottom: 0;
 `
 
 let Container = styled.div`
@@ -65,6 +65,8 @@ interface CardCommentsProps {
 }
 
 export default function CardComments ({ comments, id, addComment, card, deleteComment }: CardCommentsProps) {
+
+    console.log('rerender comment');
 
     let [commentsField, setCommentsField] = useState('');
 

@@ -56,11 +56,11 @@ let CloseButton = styled.button`
 
 interface AddCardPopupProps {
     clickHandler: (e: React.SyntheticEvent, title: string, text: string, status: string) => void,
-    initialTitles: string[],
+    titles: string[],
     closePopup: () => void
 }
 
-export default function AddCardPopup ({clickHandler, initialTitles, closePopup}: AddCardPopupProps) {
+export default function AddCardPopup ({clickHandler, titles, closePopup}: AddCardPopupProps) {
 
     let [title, setTitle] = useState('');
     let [text, setText] = useState('');
@@ -100,7 +100,7 @@ export default function AddCardPopup ({clickHandler, initialTitles, closePopup}:
                 <Title type='text' placeholder='Title' value={title} onChange={(e) => changeTitle(e)} />
                 <Text placeholder='Text' value={text} onChange={(e) => changeText(e)} />
                 <Select name='select' value={status} onChange={changeStatus}>
-                    { initialTitles.map((title, i) => (
+                    { titles.map((title, i) => (
                         <option key={i} value={i}>{title}</option>
                     )) }
                 </Select>
