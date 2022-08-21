@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import CardPopup from "./popups/cardPopup";
 
@@ -92,33 +92,23 @@ interface ColumnProps {
     updateCard: (newCard: ICard) => void
     addComment: (newComment: IComment, id: string) => void,
     id: number,
-    deleteComment: (card: ICard, newComments: IComment[]) => void,
+    deleteComment: (card: ICard, id: string) => void,
     titleUpdate: (id: number, e: {target: HTMLInputElement}) => void,
     titles: string[],
-    showCard: boolean,
-    open: () => void,
-    close: () => void
+    openCard: (card: ICard) => void,
+    closeCard: () => void,
+    cardState: ICard | undefined,
+    updateComment: (card: ICard, commentId: string, newText: string) => void
 }
 
-export default function Column ( { cards, openPopup, updateCard, titles, showCard, open, close,
-    addComment, deleteCard, titleUpdate, id, deleteComment}: ColumnProps
+export default function Column ( { cards, openPopup, updateCard, titles, openCard, closeCard, cardState,
+    addComment, deleteCard, titleUpdate, id, deleteComment, updateComment}: ColumnProps
     ) {
-
-    let [cardState, setCardState] = useState<ICard | undefined>()
     
     let changeHandler = (e: {target: HTMLInputElement}) => {
         titleUpdate(id, e);
     }
     
-    let openCard = (card: ICard) => {
-        open();
-        setCardState(card);
-    }
-
-    let closeCard = () => {
-        close();
-        setCardState(undefined);
-    }
 
     return <StyledColumn>
         <Input defaultValue={titles[id]} onBlur={(e) => changeHandler(e)} />
@@ -135,7 +125,8 @@ export default function Column ( { cards, openPopup, updateCard, titles, showCar
                 <Author> {card.author} </Author>
             </Card>
         )) }
-        { showCard && cardState ? <CardPopup
+        { cardState ? <CardPopup
+            updateComment={updateComment}
             deleteComment={deleteComment}
             deleteCard={deleteCard}
             addComment={addComment}
@@ -143,9 +134,9 @@ export default function Column ( { cards, openPopup, updateCard, titles, showCar
             titles={titles}
             id={id}
             card={cardState}
+            cards={cards}
             updateCard={updateCard}
         /> : null }
-        
         <Button onClick={openPopup}>Add new card</Button>
     </StyledColumn>
 }

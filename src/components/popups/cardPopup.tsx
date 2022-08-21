@@ -98,13 +98,15 @@ interface CardPopupProps {
     updateCard: (newCard: ICard) => void,
     addComment: (newComment: IComment, id: string) => void,
     deleteCard: (id: string) => void,
-    deleteComment: (card: ICard, newComments: IComment[]) => void,
-    id: number
+    deleteComment: (card: ICard, id: string) => void,
+    id: number,
+    cards: ICard[],
+    updateComment: (card: ICard, commentId: string, newText: string) => void
 }
 
 export default function CardPopup(
-    { card, titles, closeCard, updateCard, addComment, 
-    deleteCard, deleteComment, id}: CardPopupProps
+    { card, titles, closeCard, updateCard, addComment, cards,
+    deleteCard, deleteComment, id, updateComment}: CardPopupProps
     ) {
     
     useEscape(() => closeCard());
@@ -145,8 +147,8 @@ export default function CardPopup(
             comments: []
         }
         updateCard(newCard);
+        closeCard();
     }
-
 
     let ref = useRef(null);
     // useClickOutside(ref, closeCard);
@@ -162,7 +164,7 @@ export default function CardPopup(
                     <Delete type='button' onClick={(e) => deleteHandler(e)}>Delete card</Delete>
                     <Input defaultValue={card.title} onChange={(e) => changeTitle(e)}  />
                     <Textarea defaultValue={card.text} onChange={(e) => changeText(e)}/>
-                    <Select defaultValue={id} onChange={(e) => changeStatus(e)} >
+                    <Select defaultValue={card.status} onChange={(e) => changeStatus(e)} >
                         { titles.map((title, i) => (
                             <option key={i} value={i}>{title}</option>
                         )) }
@@ -172,11 +174,13 @@ export default function CardPopup(
                 <hr/>
             </Container>
             <CardComments
+                updateComment={updateComment}
                 deleteComment={deleteComment}
                 card={card}
                 comments={card.comments}
                 id={card.id}
                 addComment={addComment}
+                cards={cards}
             /> 
         </StyledPopupContent>
     </PopupContainer>

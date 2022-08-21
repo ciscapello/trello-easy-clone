@@ -14,9 +14,15 @@ let StyledBoard = styled.div`
 
 export default function Board () {
 
-    let initialTitles = ['TODO', 'In Progress', 'Testing', 'Done'];
+    let initialTitles: string[];
 
-    let [titles, setTitles] = useState(initialTitles);
+    if (localStorage.getItem('titles')) {
+        initialTitles = JSON.parse(localStorage.getItem('titles') || '');
+    } else {
+        initialTitles = ['TODO', 'In Progress', 'Testing', 'Done'];
+    }
+
+    let [titles, setTitles] = useState<string[]>(initialTitles);
 
     let titleUpdate = (id: number, e: {target: HTMLInputElement}) => {
         let newArr = titles.map((title, i) => {
@@ -25,12 +31,22 @@ export default function Board () {
             }
             return title;
         })
+        localStorage.setItem('titles', JSON.stringify(newArr));
         setTitles(newArr);
     }
 
     let [isShow, setIsShow] = useState(false);
 
-    let [cards, setCards] = useState(initialCards);
+    let initialCards;
+
+    if (localStorage.getItem('cards')) {
+        initialCards = JSON.parse(localStorage.getItem('cards') || '');
+    } else {
+        initialCards = [];
+    }
+    
+    
+    let [cards, setCards] = useState<ICard[]>(initialCards);
 
     let updateCard = (newCard: ICard) => {
         let newArr = cards.map((card) => {
@@ -46,21 +62,26 @@ export default function Board () {
             }
             return card
         });
+        localStorage.setItem('cards', JSON.stringify(newArr));
         setCards(newArr);
     }
 
     let deleteCard = (id: string) => {
         let newArr = cards.filter((card) => card.id !== id);
+        localStorage.setItem('cards', JSON.stringify(newArr));
         setCards(newArr);
     }
 
-    let deleteComment = (card: ICard, newComments: IComment[]) => {
+    let deleteComment = (card: ICard, id: string) => {
         let newArr = cards.map((elem) => {
             if (elem.id === card.id) {
-                return { ...elem, comments: newComments};
+                let newComments = elem.comments.filter((com) => com.id !== id)
+                elem.comments = newComments;
+                return elem;
             }
             return elem;
-        })
+        });
+        localStorage.setItem('cards', JSON.stringify(newArr));
         setCards(newArr);
     }
 
@@ -68,10 +89,21 @@ export default function Board () {
         let newArr = cards.map((card) => {
             if (card.id === id) {
                 card.comments.push(newComment);
-                console.log(card.comments);
             }
-            return card
+            return card;
         });
+        localStorage.setItem('cards', JSON.stringify(newArr));
+        setCards(newArr);
+    }
+
+    let updateComment = (card: ICard, commentId: string, newText: string) => {
+        let newArr = [...cards];
+        let ind = newArr.findIndex((elem) => elem.id === card.id);
+        let i = card.comments.findIndex((elem) => elem.id === commentId);
+        newArr[ind].comments[i].text = newText;
+        console.log(newText);
+        console.log(newArr[ind].comments[i]);
+        localStorage.setItem('cards', JSON.stringify(newArr));
         setCards(newArr);
     }
 
@@ -87,8 +119,10 @@ export default function Board () {
                 status: Number(status),
                 comments: []
             }
-            setCards([...cards, newCard])
-            setIsShow(false);
+        let newArr = [...cards, newCard];
+        setCards(newArr);
+        setIsShow(false);
+        localStorage.setItem('cards', JSON.stringify(newArr));
         }
     }
 
@@ -100,23 +134,23 @@ export default function Board () {
         setIsShow(false);
     }
 
-    let [showCard, setShowCard] = useState(true);
+    let [cardState, setCardState] = useState<ICard | undefined>()
 
-    let open = () => {
-        setShowCard(true);
+    let openCard = (card: ICard) => {
+        setCardState(card);
     }
 
-    let close = () => {
-        setShowCard(false);
+    let closeCard = () => {
+        setCardState(undefined);
     }
 
     return  <>
         <StyledBoard>
             { initialTitles.map((title, i) => (
                 <Column
-                    showCard={showCard}
-                    open={open}
-                    close={close}
+                    cardState={cardState}
+                    openCard={openCard}
+                    closeCard={closeCard}
                     titles={titles}
                     titleUpdate={titleUpdate}
                     deleteComment={deleteComment}
@@ -126,7 +160,9 @@ export default function Board () {
                     key={uuidv4()} 
                     id={i}
                     cards={cards.filter((card) => card.status === i)}
-                    openPopup={openPopup} />
+                    openPopup={openPopup}
+                    updateComment={updateComment} />
+                    
             )) }
         </StyledBoard>
         { isShow ? <AddCardPopup 
@@ -138,64 +174,64 @@ export default function Board () {
 }
 
 
-let initialCards = [
-    {
-        id: uuidv4(),
-        title: 'Новая карточка',
-        text: 'Создать карточку',
-        author: localStorage.getItem('username'),
-        status: 3,
-        comments: [
-            {
-                id: uuidv4(),
-                author: localStorage.getItem('username'),
-                text: 'Неплохая карточка'
-            },
-            {
-                id: uuidv4(),
-                author: 'John Doe',
-                text: 'Да, вполне'
-            },
-        ]
-    },
-    {
-        id: uuidv4(),
-        title: 'И еще одна карточка',
-        text: 'Создать принципиально новую карточку',
-        author: localStorage.getItem('username'),
-        status: 2,
-        comments: []
-    },
-    {
-        id: uuidv4(),
-        title: '1',
-        text: '1111111111',
-        author: localStorage.getItem('username'),
-        status: 0,
-        comments: []
-    },
-    {
-        id: uuidv4(),
-        title: '2',
-        text: '2222222',
-        author: localStorage.getItem('username'),
-        status: 0,
-        comments: []
-    },
-    {
-        id: uuidv4(),
-        title: '3',
-        text: '333333',
-        author: localStorage.getItem('username'),
-        status: 0,
-        comments: []
-    },
-    {
-        id: uuidv4(),
-        title: '4',
-        text: '44444444',
-        author: localStorage.getItem('username'),
-        status: 0,
-        comments: []
-    }
-]
+// let initialCards = [
+//     {
+//         id: uuidv4(),
+//         title: 'Новая карточка',
+//         text: 'Создать карточку',
+//         author: localStorage.getItem('username'),
+//         status: 3,
+//         comments: [
+//             {
+//                 id: uuidv4(),
+//                 author: localStorage.getItem('username'),
+//                 text: 'Неплохая карточка'
+//             },
+//             {
+//                 id: uuidv4(),
+//                 author: 'John Doe',
+//                 text: 'Да, вполне'
+//             },
+//         ]
+//     },
+//     {
+//         id: uuidv4(),
+//         title: 'И еще одна карточка',
+//         text: 'Создать принципиально новую карточку',
+//         author: localStorage.getItem('username'),
+//         status: 2,
+//         comments: []
+//     },
+//     {
+//         id: uuidv4(),
+//         title: '1',
+//         text: '1111111111',
+//         author: localStorage.getItem('username'),
+//         status: 0,
+//         comments: []
+//     },
+//     {
+//         id: uuidv4(),
+//         title: '2',
+//         text: '2222222',
+//         author: localStorage.getItem('username'),
+//         status: 0,
+//         comments: []
+//     },
+//     {
+//         id: uuidv4(),
+//         title: '3',
+//         text: '333333',
+//         author: localStorage.getItem('username'),
+//         status: 0,
+//         comments: []
+//     },
+//     {
+//         id: uuidv4(),
+//         title: '4',
+//         text: '44444444',
+//         author: localStorage.getItem('username'),
+//         status: 0,
+//         comments: []
+//     }
+// ]

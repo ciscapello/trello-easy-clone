@@ -4,7 +4,7 @@ import styled from "styled-components";
 export const PopupContainer = styled.div<{display: boolean}>`
     width:100%;
     min-height:100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.3);
     overflow:scroll;
     position:fixed;
     top:0px;

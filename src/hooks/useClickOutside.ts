@@ -13,7 +13,6 @@ export const useClickOutside = <T extends HTMLElement = HTMLElement>(
           console.log(event.target);
         return;
       }
-      console.log(event.target);
       handler(event);
     };
 

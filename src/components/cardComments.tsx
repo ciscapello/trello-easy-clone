@@ -2,23 +2,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { ICard, IComment } from "./column";
 import { v4 as uuidv4 } from 'uuid';
+import Comment from './comment';
 
 
 let Comments = styled.div`
     background-color: white;
-`
-
-let Comment = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-    margin-left: 10px;
-    border-bottom: 1px solid gray;
-`
-
-let Author = styled.h4`
-    margin-top: 0;
-    margin-bottom: 0;
 `
 
 let Container = styled.div`
@@ -45,15 +33,6 @@ let Button = styled.button`
     align-self: flex-end;
 `
 
-let Delete = styled.small`
-    margin-right: 10px;
-    cursor: pointer;
-`
-
-let HeadContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
-`
 
 
 interface CardCommentsProps {
@@ -61,14 +40,17 @@ interface CardCommentsProps {
     id: string,
     addComment: (newComment: IComment, id: string) => void,
     card: ICard,
-    deleteComment: (card: ICard, newComments: IComment[]) => void
+    deleteComment: (card: ICard, id: string) => void,
+    cards: ICard[],
+    updateComment: (card: ICard, commentId: string, newText: string) => void
 }
 
-export default function CardComments ({ comments, id, addComment, card, deleteComment }: CardCommentsProps) {
-
-    console.log('rerender comment');
+export default function CardComments ({ 
+    comments, id, addComment, card, deleteComment, cards, updateComment }: CardCommentsProps) {
 
     let [commentsField, setCommentsField] = useState('');
+
+    console.log('rerender');
 
     let changeHandler = (e: {target: HTMLInputElement}) => {
         setCommentsField(() => e.target.value);
@@ -85,29 +67,23 @@ export default function CardComments ({ comments, id, addComment, card, deleteCo
         setCommentsField('');
     }
 
-    let deleteHandler = (id: string) => {
-        let newArr = comments!.filter((comment) => comment.id !== id);
-        deleteComment(card, newArr);
-    }
-
     return  <Container>
         <h3>Комментарии</h3>
         <hr/>
         <Input placeholder='Add comment' value={commentsField} onChange={(e) => changeHandler(e)} type='text' />
-        <Button disabled={!commentsField.trim()} onClick={(e) => commentsHandler(e)}>Send</Button>
+        <Button type='button' disabled={!commentsField.trim()} onClick={(e) => commentsHandler(e)}>Send</Button>
         <hr/>
         { comments ? <Comments>
             { comments.map((comment) => (
-                <Comment key={comment.id}>
-                    <HeadContainer>
-                        <Author>{ comment.author }</Author>
-                        <Delete onClick={() => deleteHandler(comment.id)} >X</Delete>
-                    </HeadContainer>
-                    <p>{comment.text}</p>
-                </Comment>
+                <Comment
+                    updateComment={updateComment}
+                    key={comment.id}
+                    comment={comment}
+                    card={card}
+                    deleteComment={deleteComment}
+                />
             )) }
             </Comments>
-        : 'Тут пока нет комментариев' }
+        : <p>Тут пока нет комментариев</p> }
     </Container>
-
 }
