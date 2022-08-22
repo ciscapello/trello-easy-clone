@@ -65,7 +65,7 @@ export default function Popup () {
         <PopupContent>
             <form>
                 <H2>Пожалуйста, введите ваше имя</H2>
-                <Input value={name} onBlur={(e) => changeHandler(e)} type='text'/>
+                <Input value={name} onChange={(e) => changeHandler(e)} type='text'/>
                 <Button onClick={(e) => handleClick(e)}>OK</Button>
             </form>
         </PopupContent>

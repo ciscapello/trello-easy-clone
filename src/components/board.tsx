@@ -1,16 +1,28 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Column, { ICard, IComment } from './column';
+import Column from './column';
 import { v4 as uuidv4 } from 'uuid';
 import AddCardPopup from './popups/addCardPopup';
-
-
 
 let StyledBoard = styled.div`
     display: flex;
     justify-content: space-around;
 `
 
+export interface ICard {
+    id: string
+    title: string,
+    text: string,
+    author: string | null,
+    status: number,
+    comments: IComment[]
+}
+
+export interface IComment {
+    id: string,
+    author: string | null,
+    text: string
+}
 
 export default function Board () {
 
@@ -44,7 +56,6 @@ export default function Board () {
     } else {
         initialCards = [];
     }
-    
     
     let [cards, setCards] = useState<ICard[]>(initialCards);
 
@@ -101,12 +112,9 @@ export default function Board () {
         let ind = newArr.findIndex((elem) => elem.id === card.id);
         let i = card.comments.findIndex((elem) => elem.id === commentId);
         newArr[ind].comments[i].text = newText;
-        console.log(newText);
-        console.log(newArr[ind].comments[i]);
         localStorage.setItem('cards', JSON.stringify(newArr));
         setCards(newArr);
     }
-
     
     let clickHandler = (e: React.SyntheticEvent, title: string, text: string, status: string) => {
         e.preventDefault();
@@ -162,7 +170,6 @@ export default function Board () {
                     cards={cards.filter((card) => card.status === i)}
                     openPopup={openPopup}
                     updateComment={updateComment} />
-                    
             )) }
         </StyledBoard>
         { isShow ? <AddCardPopup 
@@ -172,66 +179,3 @@ export default function Board () {
         /> : null }
     </>
 }
-
-
-// let initialCards = [
-//     {
-//         id: uuidv4(),
-//         title: 'Новая карточка',
-//         text: 'Создать карточку',
-//         author: localStorage.getItem('username'),
-//         status: 3,
-//         comments: [
-//             {
-//                 id: uuidv4(),
-//                 author: localStorage.getItem('username'),
-//                 text: 'Неплохая карточка'
-//             },
-//             {
-//                 id: uuidv4(),
-//                 author: 'John Doe',
-//                 text: 'Да, вполне'
-//             },
-//         ]
-//     },
-//     {
-//         id: uuidv4(),
-//         title: 'И еще одна карточка',
-//         text: 'Создать принципиально новую карточку',
-//         author: localStorage.getItem('username'),
-//         status: 2,
-//         comments: []
-//     },
-//     {
-//         id: uuidv4(),
-//         title: '1',
-//         text: '1111111111',
-//         author: localStorage.getItem('username'),
-//         status: 0,
-//         comments: []
-//     },
-//     {
-//         id: uuidv4(),
-//         title: '2',
-//         text: '2222222',
-//         author: localStorage.getItem('username'),
-//         status: 0,
-//         comments: []
-//     },
-//     {
-//         id: uuidv4(),
-//         title: '3',
-//         text: '333333',
-//         author: localStorage.getItem('username'),
-//         status: 0,
-//         comments: []
-//     },
-//     {
-//         id: uuidv4(),
-//         title: '4',
-//         text: '44444444',
-//         author: localStorage.getItem('username'),
-//         status: 0,
-//         comments: []
-//     }
-// ]

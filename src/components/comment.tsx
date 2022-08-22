@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { ICard, IComment } from "./column";
-
+import { ICard, IComment } from "./board";
 
 let CommentField = styled.div`
     display: flex;
@@ -40,7 +39,6 @@ interface CommentProps {
     updateComment: (card: ICard, commentId: string, newText: string) => void
 }
 
-
 export default function Comment ({ comment, card, deleteComment, updateComment }: CommentProps) {
 
     let [textField, setTextField] = useState(comment.text);
@@ -49,11 +47,8 @@ export default function Comment ({ comment, card, deleteComment, updateComment }
         deleteComment(card, id);
     }
 
-
     let changeHandler = (e: {target: HTMLInputElement}) => {
         setTextField(() => e.target.value);
-        console.log(textField);
-        console.log(e.target.value);
     }
 
     let blurHandler = () => {

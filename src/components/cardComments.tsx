@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { ICard, IComment } from "./column";
+import { ICard, IComment } from "./board";
 import { v4 as uuidv4 } from 'uuid';
 import Comment from './comment';
-
 
 let Comments = styled.div`
     background-color: white;
@@ -33,8 +32,6 @@ let Button = styled.button`
     align-self: flex-end;
 `
 
-
-
 interface CardCommentsProps {
     comments?: IComment[],
     id: string,
@@ -49,8 +46,6 @@ export default function CardComments ({
     comments, id, addComment, card, deleteComment, cards, updateComment }: CardCommentsProps) {
 
     let [commentsField, setCommentsField] = useState('');
-
-    console.log('rerender');
 
     let changeHandler = (e: {target: HTMLInputElement}) => {
         setCommentsField(() => e.target.value);

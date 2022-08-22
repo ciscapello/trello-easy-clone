@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { PopupContainer, PopupContent } from "./popup";
 import styled from "styled-components";
-import { ICard, IComment } from "../column";
+import { ICard, IComment } from "../board";
 import useEscape from "../../hooks/useEscape";
 import CardComments from "../cardComments";
 
@@ -151,7 +151,6 @@ export default function CardPopup(
     }
 
     let ref = useRef(null);
-    // useClickOutside(ref, closeCard);
     
     return <PopupContainer display>
         <StyledPopupContent ref={ref}>

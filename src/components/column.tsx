@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { ICard, IComment } from "./board";
 import CardPopup from "./popups/cardPopup";
 
 let StyledColumn = styled.div`
@@ -70,21 +71,6 @@ let Comments = styled.h5`
     margin: auto 0;
 `
 
-export interface ICard {
-    id: string
-    title: string,
-    text: string,
-    author: string | null,
-    status: number,
-    comments: IComment[]
-}
-
-export interface IComment {
-    id: string,
-    author: string | null,
-    text: string
-}
-
 interface ColumnProps {
     deleteCard: (id: string) => void,
     cards: ICard[],
@@ -109,7 +95,6 @@ export default function Column ( { cards, openPopup, updateCard, titles, openCar
         titleUpdate(id, e);
     }
     
-
     return <StyledColumn>
         <Input defaultValue={titles[id]} onBlur={(e) => changeHandler(e)} />
         <hr/>
