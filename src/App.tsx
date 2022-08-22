@@ -1,16 +1,33 @@
-import React from 'react';
-import Popup from './components/popups/popup';
-import Board from './components/board';
+import React, { useState } from "react";
+import { Popup, Board } from "./components";
+import { createGlobalStyle } from "styled-components";
 
 function App() {
-    if (localStorage.getItem('username')) {
-        return <Board />
-    }
+	let [login, setLogin] = useState(Boolean(localStorage.getItem("username")));
 
-    return <>
-            <Board/>
-            <Popup/>
-        </>
+	const loginHandle = () => {
+		setLogin(false);
+	};
+
+	return (
+		<>
+			{login ? (
+				<Board loginHandle={loginHandle} />
+			) : (
+				<>
+					<Board loginHandle={loginHandle} /> <Popup />
+				</>
+			)}
+			<GlobalStyle />
+		</>
+	);
 }
 
 export default App;
+
+const GlobalStyle = createGlobalStyle`
+    body {
+        margin: 0;
+        padding: 0;
+    }
+`;
