@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { Comment } from "../../components";
+import { useAppDispatch } from "../../hooks/redux";
+import { addComment } from "../../store/cards/cardsSlice";
 import { CardCommentsProps } from "../../types";
 
 export default function CardComments({
 	comments,
 	id,
-	addComment,
 	card,
-	deleteComment,
 	cards,
-	updateComment,
 }: CardCommentsProps) {
+	const dispatch = useAppDispatch();
+
 	let [commentsField, setCommentsField] = useState("");
 
 	const changeHandler = (event: { target: HTMLInputElement }) => {
@@ -26,7 +27,7 @@ export default function CardComments({
 			author: localStorage.getItem("username"),
 			text: commentsField,
 		};
-		addComment(newComment, id);
+		dispatch(addComment({ newComment, id }));
 		setCommentsField("");
 	};
 
@@ -51,13 +52,7 @@ export default function CardComments({
 			{comments ? (
 				<Comments>
 					{comments.map((comment) => (
-						<Comment
-							updateComment={updateComment}
-							key={comment.id}
-							comment={comment}
-							card={card}
-							deleteComment={deleteComment}
-						/>
+						<Comment key={comment.id} comment={comment} card={card} />
 					))}
 				</Comments>
 			) : (

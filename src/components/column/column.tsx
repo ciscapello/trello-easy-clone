@@ -6,17 +6,12 @@ import { CardPopup } from "../../components";
 export default function Column({
 	cards,
 	openPopup,
-	updateCard,
 	titles,
 	openCard,
 	closeCard,
 	cardState,
-	addComment,
-	deleteCard,
 	titleUpdate,
 	id,
-	deleteComment,
-	updateComment,
 }: ColumnProps) {
 	const changeHandler = (event: { target: HTMLInputElement }) => {
 		titleUpdate(id, event);
@@ -48,16 +43,11 @@ export default function Column({
 			))}
 			{cardState ? (
 				<CardPopup
-					updateComment={updateComment}
-					deleteComment={deleteComment}
-					deleteCard={deleteCard}
-					addComment={addComment}
 					closeCard={closeCard}
 					titles={titles}
 					id={id}
 					card={cardState}
 					cards={cards}
-					updateCard={updateCard}
 				/>
 			) : null}
 			<Button onClick={openPopup}>Add new card</Button>
