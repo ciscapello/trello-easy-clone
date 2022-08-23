@@ -1,3 +1,1 @@
-import CardComments from "./cardComments";
-
-export default CardComments;
+export { default } from "./cardComments";

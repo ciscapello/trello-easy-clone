@@ -1,30 +1,30 @@
 import React, { useRef, useState } from "react";
 import { PopupContainer, PopupContent } from "../popup/popup";
 import styled from "styled-components";
-import { useEscape } from "../../hooks";
+import { useEscape, useAppDispatch } from "../../hooks";
 import { CardComments } from "../../components";
-import { CardPopupProps, ICard } from "../../types";
-import { deleteCard, updateCard } from "../../store/cards/cardsSlice";
-import { useAppDispatch } from "../../hooks/redux";
+import { ICard } from "../../types";
+import { deleteCard, updateCard, resetCardState } from "../../store";
 
-export default function CardPopup({
-  card,
-  titles,
-  closeCard,
-  cards,
-  id,
-}: CardPopupProps) {
-  let dispatch = useAppDispatch();
-  useEscape(() => closeCard());
+export interface CardPopupProps {
+  card: ICard;
+  titles: String[];
+  id: number;
+  cards: ICard[];
+}
+
+export default function CardPopup({ card, titles, cards, id }: CardPopupProps) {
+  const dispatch = useAppDispatch();
+  useEscape(() => dispatch(resetCardState()));
 
   const clickHandler = (event: React.MouseEvent) => {
     event.stopPropagation();
-    closeCard();
+    dispatch(resetCardState());
   };
 
-  let [title, setTitle] = useState(card.title);
-  let [text, setText] = useState(card.text);
-  let [status, setStatus] = useState(card.status);
+  const [title, setTitle] = useState(card.title);
+  const [text, setText] = useState(card.text);
+  const [status, setStatus] = useState(card.status);
 
   const changeTitle = (event: { target: HTMLInputElement }) => {
     setTitle(() => event.target.value);
@@ -39,13 +39,13 @@ export default function CardPopup({
   };
 
   const deleteHandler = (event: React.MouseEvent) => {
-    let { id } = card;
+    const { id } = card;
     dispatch(deleteCard(id));
     clickHandler(event);
   };
 
   const update = () => {
-    let newCard: ICard = {
+    const newCard: ICard = {
       id: card.id,
       title: title,
       text: text,
@@ -54,7 +54,7 @@ export default function CardPopup({
       comments: [],
     };
     dispatch(updateCard(newCard));
-    closeCard();
+    dispatch(resetCardState());
   };
 
   const ref = useRef(null);

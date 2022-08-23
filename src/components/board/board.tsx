@@ -1,85 +1,33 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { AddCardPopup, Navbar, Column } from "..";
-import { useAppSelector } from "../../hooks/redux";
-import { BoardProps, ICard } from "../../types";
+import { useAppSelector } from "../../hooks";
+
+export interface BoardProps {
+  loginHandle: () => void;
+}
 
 export default function Board({ loginHandle }: BoardProps) {
-  let initialTitles: string[];
+  const titles = useAppSelector((state) => state.titles);
 
-  // let dispatch = useAppDispatch();
+  const isShow = useAppSelector((state) => state.popups.addCardPopup);
 
-  if (localStorage.getItem("titles")) {
-    initialTitles = JSON.parse(localStorage.getItem("titles") || "");
-  } else {
-    initialTitles = ["TODO", "In Progress", "Testing", "Done"];
-  }
-
-  let [titles, setTitles] = useState<string[]>(initialTitles);
-
-  const titleUpdate = (id: number, event: { target: HTMLInputElement }) => {
-    let newArr = titles.map((title, index) => {
-      if (index === id) {
-        return (title = event.target.value);
-      }
-      return title;
-    });
-    localStorage.setItem("titles", JSON.stringify(newArr));
-    setTitles(newArr);
-  };
-
-  const [isShow, setIsShow] = useState(false);
-
-  let cards = useAppSelector((state) => state.cards.cards);
-
-  const clickHandler = () => {
-    setIsShow(false);
-  };
-
-  const openPopup = () => {
-    setIsShow(true);
-  };
-
-  const closePopup = () => {
-    setIsShow(false);
-  };
-
-  let [cardState, setCardState] = useState<ICard | undefined>();
-
-  const openCard = (card: ICard) => {
-    setCardState(card);
-  };
-
-  const closeCard = () => {
-    setCardState(undefined);
-  };
+  const cards = useAppSelector((state) => state.cards.cards);
 
   return (
     <>
       <Navbar loginHandle={loginHandle} />
       <StyledBoard>
-        {initialTitles.map((title, index) => (
+        {titles.map((title, index) => (
           <Column
-            cardState={cardState}
-            openCard={openCard}
-            closeCard={closeCard}
-            titles={titles}
-            titleUpdate={titleUpdate}
             key={uuidv4()}
             id={index}
             cards={cards.filter((card) => card.status === index)}
-            openPopup={openPopup}
           />
         ))}
       </StyledBoard>
-      {isShow ? (
-        <AddCardPopup
-          titles={titles}
-          clickHandler={clickHandler}
-          closePopup={closePopup}
-        />
-      ) : null}
+      {isShow ? <AddCardPopup titles={titles} /> : null}
     </>
   );
 }

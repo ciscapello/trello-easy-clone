@@ -1,21 +1,19 @@
 import React, { useRef, useState } from "react";
 import { PopupContainer, PopupContent } from "../popup/popup";
 import styled from "styled-components";
-import { useClickOutside, useEscape } from "../../hooks";
-import { AddCardPopupProps } from "../../types";
-import { useAppDispatch } from "../../hooks/redux";
-import { addCard } from "../../store/cards/cardsSlice";
+import { useClickOutside, useEscape, useAppDispatch } from "../../hooks";
+import { hideAddCardPopup, addCard } from "../../store";
 
-export default function AddCardPopup({
-  clickHandler,
-  titles,
-  closePopup,
-}: AddCardPopupProps) {
-  let dispatch = useAppDispatch();
+export interface AddCardPopupProps {
+  titles: string[];
+}
 
-  let [title, setTitle] = useState("");
-  let [text, setText] = useState("");
-  let [status, setStatus] = useState("0");
+export default function AddCardPopup({ titles }: AddCardPopupProps) {
+  const dispatch = useAppDispatch();
+
+  const [title, setTitle] = useState("");
+  const [text, setText] = useState("");
+  const [status, setStatus] = useState("0");
 
   const changeTitle = (event: { target: HTMLInputElement }) => {
     setTitle(() => event.target.value);
@@ -34,9 +32,14 @@ export default function AddCardPopup({
     setTitle("");
     setText("");
     setStatus("0");
+    dispatch(hideAddCardPopup());
   };
 
-  useEscape(() => closePopup());
+  useEscape(() => dispatch(hideAddCardPopup()));
+
+  const closePopup = () => {
+    dispatch(hideAddCardPopup());
+  };
 
   const ref = useRef(null);
   useClickOutside(ref, closePopup);

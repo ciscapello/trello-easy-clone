@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useAppDispatch } from "../../hooks/redux";
-import { deleteComment, updateComment } from "../../store/cards/cardsSlice";
-import { CommentProps } from "../../types";
+import { deleteComment, updateComment } from "../../store";
+import { ICard, IComment } from "../../types";
+
+export interface CommentProps {
+  comment: IComment;
+  card: ICard;
+}
 
 export default function Comment({ comment, card }: CommentProps) {
-  let dispatch = useAppDispatch();
-  let [textField, setTextField] = useState(comment.text);
+  const dispatch = useAppDispatch();
+  const [textField, setTextField] = useState(comment.text);
 
   const deleteHandler = (id: string) => {
     dispatch(deleteComment({ card, id }));
-    // deleteComment(card, id);
   };
 
   const changeHandler = (event: { target: HTMLInputElement }) => {
@@ -18,8 +22,8 @@ export default function Comment({ comment, card }: CommentProps) {
   };
 
   const blurHandler = () => {
-    let commentId = comment.id;
-    let newText = textField;
+    const commentId = comment.id;
+    const newText = textField;
     dispatch(updateComment({ card, commentId, newText }));
   };
 

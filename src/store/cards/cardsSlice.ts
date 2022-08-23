@@ -44,10 +44,10 @@ const cardsSlice = createSlice({
   initialState,
   reducers: {
     addCard: (state, action: PayloadAction<IAddCard>) => {
-      let { text, title, status, event } = action.payload;
+      const { text, title, status, event } = action.payload;
       event.preventDefault();
       if (title.trim() && text.trim()) {
-        let newCard: ICard = {
+        const newCard: ICard = {
           id: uuidv4(),
           title: title,
           text: text,
@@ -55,14 +55,14 @@ const cardsSlice = createSlice({
           status: Number(status),
           comments: [],
         };
-        let newArr = [...state.cards, newCard];
+        const newArr = [...state.cards, newCard];
         state.cards = newArr;
         localStorage.setItem("cards", JSON.stringify(newArr));
       }
     },
     updateCard: (state, action: PayloadAction<ICard>) => {
-      let newCard = action.payload;
-      let newArr = state.cards.map((card) => {
+      const newCard = action.payload;
+      const newArr = state.cards.map((card) => {
         if (card.id === newCard.id) {
           return {
             id: card.id,
@@ -79,14 +79,14 @@ const cardsSlice = createSlice({
       localStorage.setItem("cards", JSON.stringify(newArr));
     },
     deleteCard: (state, action: PayloadAction<string>) => {
-      let id = action.payload;
-      let newArr = state.cards.filter((card) => card.id !== id);
+      const id = action.payload;
+      const newArr = state.cards.filter((card) => card.id !== id);
       localStorage.setItem("cards", JSON.stringify(newArr));
       state.cards = newArr;
     },
     addComment: (state, action: PayloadAction<IAddComment>) => {
-      let { id, newComment } = action.payload;
-      let newArr = state.cards!.map((card) => {
+      const { id, newComment } = action.payload;
+      const newArr = state.cards!.map((card) => {
         if (card.id === id) {
           card.comments.push(newComment);
         }
@@ -96,10 +96,10 @@ const cardsSlice = createSlice({
       localStorage.setItem("cards", JSON.stringify(newArr));
     },
     deleteComment: (state, action: PayloadAction<IDeleteComment>) => {
-      let { card, id } = action.payload;
-      let newArr = state.cards.map((elem) => {
+      const { card, id } = action.payload;
+      const newArr = state.cards.map((elem) => {
         if (elem.id === card.id) {
-          let newComments = elem.comments.filter(
+          const newComments = elem.comments.filter(
             (comment) => comment.id !== id
           );
           elem.comments = newComments;
@@ -111,10 +111,10 @@ const cardsSlice = createSlice({
       state.cards = newArr;
     },
     updateComment: (state, action: PayloadAction<IUpdateComment>) => {
-      let { card, commentId, newText } = action.payload;
-      let newArr = [...state.cards];
-      let cardIndex = newArr.findIndex((elem) => elem.id === card.id);
-      let commentIndex = card.comments.findIndex(
+      const { card, commentId, newText } = action.payload;
+      const newArr = [...state.cards];
+      const cardIndex = newArr.findIndex((elem) => elem.id === card.id);
+      const commentIndex = card.comments.findIndex(
         (elem) => elem.id === commentId
       );
       newArr[cardIndex].comments[commentIndex].text = newText;
