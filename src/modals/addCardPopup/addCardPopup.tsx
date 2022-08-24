@@ -1,15 +1,17 @@
 import React, { useRef, useState } from "react";
 import { PopupContainer, PopupContent } from "../popup/popup";
 import styled from "styled-components";
-import { useClickOutside, useEscape, useAppDispatch } from "../../hooks";
+import {
+  useClickOutside,
+  useEscape,
+  useAppDispatch,
+  useAppSelector,
+} from "../../hooks";
 import { hideAddCardPopup, addCard } from "../../store";
 
-export interface AddCardPopupProps {
-  titles: string[];
-}
-
-export default function AddCardPopup({ titles }: AddCardPopupProps) {
+export default function AddCardPopup() {
   const dispatch = useAppDispatch();
+  const titles = useAppSelector((state) => state.titles);
 
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
@@ -28,7 +30,8 @@ export default function AddCardPopup({ titles }: AddCardPopupProps) {
   };
 
   const handleClick = (event: React.SyntheticEvent) => {
-    dispatch(addCard({ event, title, text, status }));
+    event.preventDefault();
+    dispatch(addCard({ title, text, status }));
     setTitle("");
     setText("");
     setStatus("0");

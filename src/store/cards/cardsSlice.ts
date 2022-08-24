@@ -23,7 +23,6 @@ interface IUpdateComment {
 }
 
 interface IAddCard {
-  event: React.SyntheticEvent;
   title: string;
   text: string;
   status: string;
@@ -44,8 +43,7 @@ const cardsSlice = createSlice({
   initialState,
   reducers: {
     addCard: (state, action: PayloadAction<IAddCard>) => {
-      const { text, title, status, event } = action.payload;
-      event.preventDefault();
+      const { text, title, status } = action.payload;
       if (title.trim() && text.trim()) {
         const newCard: ICard = {
           id: uuidv4(),

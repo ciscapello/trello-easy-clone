@@ -15,12 +15,14 @@ export default function Column({ cards, id }: ColumnProps) {
   const titles = useAppSelector((state) => state.titles);
   const cardState = useAppSelector((state) => state.popups.cardState);
 
+  const handleBlur = (event: { target: HTMLInputElement }) => {
+    let newTitle = event.target.value;
+    dispatch(titleUpdate({ id, newTitle }));
+  };
+
   return (
     <StyledColumn>
-      <Input
-        defaultValue={titles[id]}
-        onBlur={(event) => dispatch(titleUpdate({ id, event }))}
-      />
+      <Input defaultValue={titles[id]} onBlur={(event) => handleBlur(event)} />
       <hr />
       {cards.map((card, i) => (
         <Card key={card.id} onClick={() => dispatch(setCardState(card))}>
@@ -34,9 +36,7 @@ export default function Column({ cards, id }: ColumnProps) {
           <Author> {card.author} </Author>
         </Card>
       ))}
-      {cardState ? (
-        <CardPopup titles={titles} id={id} card={cardState} cards={cards} />
-      ) : null}
+      {cardState ? <CardPopup id={id} cardId={cardState.id} /> : null}
       <Button onClick={() => dispatch(showAddCardPopup())}>Add new card</Button>
     </StyledColumn>
   );

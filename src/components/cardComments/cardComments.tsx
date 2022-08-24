@@ -10,14 +10,12 @@ export interface CardCommentsProps {
   comments?: IComment[];
   id: string;
   card: ICard;
-  cards: ICard[];
 }
 
 export default function CardComments({
   comments,
   id,
   card,
-  cards,
 }: CardCommentsProps) {
   const dispatch = useAppDispatch();
 

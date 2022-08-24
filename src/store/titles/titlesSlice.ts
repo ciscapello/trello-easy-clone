@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface TitleUpdateAction {
   id: number;
-  event: { target: HTMLInputElement };
+  newTitle: string;
 }
 
 let initialState: string[];
@@ -17,15 +17,9 @@ const titlesSlice = createSlice({
   initialState,
   reducers: {
     titleUpdate: (state, action: PayloadAction<TitleUpdateAction>) => {
-      const { event, id } = action.payload;
-      const newArr = state.map((title, index) => {
-        if (index === id) {
-          return (title = event.target.value);
-        }
-        return title;
-      });
-      state = newArr;
-      localStorage.setItem("titles", JSON.stringify(newArr));
+      const { newTitle, id } = action.payload;
+      state[id] = newTitle;
+      localStorage.setItem("titles", JSON.stringify(state));
     },
   },
 });

@@ -27,7 +27,7 @@ export default function Board({ loginHandle }: BoardProps) {
           />
         ))}
       </StyledBoard>
-      {isShow ? <AddCardPopup titles={titles} /> : null}
+      {isShow ? <AddCardPopup /> : null}
     </>
   );
 }

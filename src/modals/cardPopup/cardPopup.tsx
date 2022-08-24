@@ -1,30 +1,34 @@
 import React, { useRef, useState } from "react";
 import { PopupContainer, PopupContent } from "../popup/popup";
 import styled from "styled-components";
-import { useEscape, useAppDispatch } from "../../hooks";
+import { useEscape, useAppDispatch, useAppSelector } from "../../hooks";
 import { CardComments } from "../../components";
 import { ICard } from "../../types";
 import { deleteCard, updateCard, resetCardState } from "../../store";
 
 export interface CardPopupProps {
-  card: ICard;
-  titles: String[];
+  cardId: string;
   id: number;
-  cards: ICard[];
 }
 
-export default function CardPopup({ card, titles, cards, id }: CardPopupProps) {
+export default function CardPopup({ cardId, id }: CardPopupProps) {
   const dispatch = useAppDispatch();
   useEscape(() => dispatch(resetCardState()));
+
+  const cards = useAppSelector((state) => state.cards.cards);
+
+  const titles = useAppSelector((state) => state.titles);
+
+  const card = cards.find((elem) => elem.id === cardId);
 
   const clickHandler = (event: React.MouseEvent) => {
     event.stopPropagation();
     dispatch(resetCardState());
   };
 
-  const [title, setTitle] = useState(card.title);
-  const [text, setText] = useState(card.text);
-  const [status, setStatus] = useState(card.status);
+  const [title, setTitle] = useState(card!.title);
+  const [text, setText] = useState(card!.text);
+  const [status, setStatus] = useState(card!.status);
 
   const changeTitle = (event: { target: HTMLInputElement }) => {
     setTitle(() => event.target.value);
@@ -39,18 +43,18 @@ export default function CardPopup({ card, titles, cards, id }: CardPopupProps) {
   };
 
   const deleteHandler = (event: React.MouseEvent) => {
-    const { id } = card;
+    const { id } = card!;
     dispatch(deleteCard(id));
     clickHandler(event);
   };
 
   const update = () => {
     const newCard: ICard = {
-      id: card.id,
+      id: card!.id,
       title: title,
       text: text,
       status: status,
-      author: card.author,
+      author: card!.author,
       comments: [],
     };
     dispatch(updateCard(newCard));
@@ -64,7 +68,7 @@ export default function CardPopup({ card, titles, cards, id }: CardPopupProps) {
       <StyledPopupContent ref={ref}>
         <Container>
           <CloseButton onClick={(event) => clickHandler(event)}>X</CloseButton>
-          <small>{card.author}</small>
+          <small>{card!.author}</small>
           <hr />
           <br />
           <Form>
@@ -72,15 +76,15 @@ export default function CardPopup({ card, titles, cards, id }: CardPopupProps) {
               Delete card
             </Delete>
             <Input
-              defaultValue={card.title}
+              defaultValue={card!.title}
               onChange={(event) => changeTitle(event)}
             />
             <Textarea
-              defaultValue={card.text}
+              defaultValue={card!.text}
               onChange={(event) => changeText(event)}
             />
             <Select
-              defaultValue={card.status}
+              defaultValue={card!.status}
               onChange={(event) => changeStatus(event)}
             >
               {titles.map((title, i) => (
@@ -95,12 +99,7 @@ export default function CardPopup({ card, titles, cards, id }: CardPopupProps) {
           </Form>
           <hr />
         </Container>
-        <CardComments
-          card={card}
-          comments={card.comments}
-          id={card.id}
-          cards={cards}
-        />
+        <CardComments card={card!} comments={card!.comments} id={card!.id} />
       </StyledPopupContent>
     </PopupContainer>
   );
