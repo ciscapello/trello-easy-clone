@@ -6,11 +6,7 @@ interface TitleUpdateAction {
 
 let initialState: string[];
 
-if (localStorage.getItem("titles")) {
-  initialState = JSON.parse(localStorage.getItem("titles") || "");
-} else {
-  initialState = ["TODO", "In Progress", "Testing", "Done"];
-}
+initialState = ["TODO", "In Progress", "Testing", "Done"];
 
 const titlesSlice = createSlice({
   name: "titles",

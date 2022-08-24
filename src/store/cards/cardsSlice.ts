@@ -30,13 +30,7 @@ interface IAddCard {
 
 let initialState: CardState;
 
-if (localStorage.getItem("cards")) {
-  initialState = {
-    cards: JSON.parse(localStorage.getItem("cards") || ""),
-  };
-} else {
-  initialState = { cards: [] };
-}
+initialState = { cards: [] };
 
 const cardsSlice = createSlice({
   name: "cards",
@@ -55,7 +49,6 @@ const cardsSlice = createSlice({
         };
         const newArr = [...state.cards, newCard];
         state.cards = newArr;
-        localStorage.setItem("cards", JSON.stringify(newArr));
       }
     },
     updateCard: (state, action: PayloadAction<ICard>) => {
@@ -74,12 +67,10 @@ const cardsSlice = createSlice({
         return card;
       });
       state.cards = newArr;
-      localStorage.setItem("cards", JSON.stringify(newArr));
     },
     deleteCard: (state, action: PayloadAction<string>) => {
       const id = action.payload;
       const newArr = state.cards.filter((card) => card.id !== id);
-      localStorage.setItem("cards", JSON.stringify(newArr));
       state.cards = newArr;
     },
     addComment: (state, action: PayloadAction<IAddComment>) => {
@@ -91,7 +82,6 @@ const cardsSlice = createSlice({
         return card;
       });
       state.cards = newArr;
-      localStorage.setItem("cards", JSON.stringify(newArr));
     },
     deleteComment: (state, action: PayloadAction<IDeleteComment>) => {
       const { card, id } = action.payload;
@@ -105,7 +95,6 @@ const cardsSlice = createSlice({
         }
         return elem;
       });
-      localStorage.setItem("cards", JSON.stringify(newArr));
       state.cards = newArr;
     },
     updateComment: (state, action: PayloadAction<IUpdateComment>) => {
@@ -117,7 +106,6 @@ const cardsSlice = createSlice({
       );
       newArr[cardIndex].comments[commentIndex].text = newText;
       state.cards = newArr;
-      localStorage.setItem("cards", JSON.stringify(newArr));
     },
   },
 });
