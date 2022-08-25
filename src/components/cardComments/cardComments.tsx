@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { Comment } from "../../components";
@@ -12,6 +13,10 @@ export interface CardCommentsProps {
   card: ICard;
 }
 
+type FieldValues = {
+  comment: string;
+};
+
 export default function CardComments({
   comments,
   id,
@@ -19,40 +24,33 @@ export default function CardComments({
 }: CardCommentsProps) {
   const dispatch = useAppDispatch();
 
-  const [commentsField, setCommentsField] = useState("");
+  const { register, handleSubmit, watch } = useForm<FieldValues>();
 
-  const changeHandler = (event: { target: HTMLInputElement }) => {
-    setCommentsField(() => event.target.value);
-  };
+  let field = watch();
 
-  const commentsHandler = (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const commentsHandler: SubmitHandler<FieldValues> = (data) => {
     const newComment = {
       id: uuidv4(),
       author: localStorage.getItem("username"),
-      text: commentsField,
+      text: data.comment,
     };
     dispatch(addComment({ newComment, id }));
-    setCommentsField("");
   };
 
   return (
     <Container>
       <h3>Комментарии</h3>
       <hr />
-      <Input
-        placeholder="Add comment"
-        value={commentsField}
-        onChange={(event) => changeHandler(event)}
-        type="text"
-      />
-      <Button
-        type="button"
-        disabled={!commentsField.trim()}
-        onClick={(event) => commentsHandler(event)}
-      >
-        Send
-      </Button>
+      <form>
+        <Input placeholder="Add comment" {...register("comment")} type="text" />
+        <Button
+          type="button"
+          disabled={!field.comment}
+          onClick={handleSubmit(commentsHandler)}
+        >
+          Send
+        </Button>
+      </form>
       <hr />
       {comments ? (
         <Comments>

@@ -1,21 +1,23 @@
-import React, { useState } from "react";
+import React from "react";
 import { Popup, Board } from "./components";
 import { createGlobalStyle } from "styled-components";
+import { useAppSelector } from "./hooks";
 
 function App() {
-  const [login, setLogin] = useState(Boolean(localStorage.getItem("username")));
+  // const [login, setLogin] = useState(Boolean(localStorage.getItem("username")));
+  const login = useAppSelector((state) => state.popups.username);
 
-  const loginHandle = () => {
-    setLogin(false);
-  };
+  // const loginHandle = () => {
+  //   setLogin(false);
+  // };
 
   return (
     <>
       {login ? (
-        <Board loginHandle={loginHandle} />
+        <Board />
       ) : (
         <>
-          <Board loginHandle={loginHandle} /> <Popup />
+          <Board /> <Popup />
         </>
       )}
       <GlobalStyle />

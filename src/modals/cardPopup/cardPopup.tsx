@@ -1,17 +1,23 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { PopupContainer, PopupContent } from "../popup/popup";
 import styled from "styled-components";
 import { useEscape, useAppDispatch, useAppSelector } from "../../hooks";
 import { CardComments } from "../../components";
 import { ICard } from "../../types";
 import { deleteCard, updateCard, resetCardState } from "../../store";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 export interface CardPopupProps {
   cardId: string;
-  id: number;
 }
 
-export default function CardPopup({ cardId, id }: CardPopupProps) {
+interface FormValues {
+  title: string;
+  text: string;
+  status: string;
+}
+
+export default function CardPopup({ cardId }: CardPopupProps) {
   const dispatch = useAppDispatch();
   useEscape(() => dispatch(resetCardState()));
 
@@ -26,21 +32,7 @@ export default function CardPopup({ cardId, id }: CardPopupProps) {
     dispatch(resetCardState());
   };
 
-  const [title, setTitle] = useState(card!.title);
-  const [text, setText] = useState(card!.text);
-  const [status, setStatus] = useState(card!.status);
-
-  const changeTitle = (event: { target: HTMLInputElement }) => {
-    setTitle(() => event.target.value);
-  };
-
-  const changeText = (event: { target: HTMLTextAreaElement }) => {
-    setText(() => event.target.value);
-  };
-
-  const changeStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatus(() => Number(event.target.value));
-  };
+  const { register, handleSubmit } = useForm<FormValues>();
 
   const deleteHandler = (event: React.MouseEvent) => {
     const { id } = card!;
@@ -48,12 +40,13 @@ export default function CardPopup({ cardId, id }: CardPopupProps) {
     clickHandler(event);
   };
 
-  const update = () => {
+  const update: SubmitHandler<FormValues> = (data) => {
+    const { title, text, status } = data;
     const newCard: ICard = {
       id: card!.id,
       title: title,
       text: text,
-      status: status,
+      status: Number(status),
       author: card!.author,
       comments: [],
     };
@@ -75,25 +68,16 @@ export default function CardPopup({ cardId, id }: CardPopupProps) {
             <Delete type="button" onClick={(event) => deleteHandler(event)}>
               Delete card
             </Delete>
-            <Input
-              defaultValue={card!.title}
-              onChange={(event) => changeTitle(event)}
-            />
-            <Textarea
-              defaultValue={card!.text}
-              onChange={(event) => changeText(event)}
-            />
-            <Select
-              defaultValue={card!.status}
-              onChange={(event) => changeStatus(event)}
-            >
+            <Input defaultValue={card!.title} {...register("title")} />
+            <Textarea defaultValue={card!.text} {...register("text")} />
+            <Select defaultValue={card!.status} {...register("status")}>
               {titles.map((title, i) => (
                 <option key={i} value={i}>
                   {title}
                 </option>
               ))}
             </Select>
-            <Button type="button" onClick={update}>
+            <Button type="button" onClick={handleSubmit(update)}>
               Add changes
             </Button>
           </Form>

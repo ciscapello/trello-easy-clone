@@ -4,11 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { AddCardPopup, Navbar, Column } from "..";
 import { useAppSelector } from "../../hooks";
 
-export interface BoardProps {
-  loginHandle: () => void;
-}
-
-export default function Board({ loginHandle }: BoardProps) {
+export default function Board() {
   const titles = useAppSelector((state) => state.titles);
 
   const isShow = useAppSelector((state) => state.popups.addCardPopup);
@@ -17,7 +13,7 @@ export default function Board({ loginHandle }: BoardProps) {
 
   return (
     <>
-      <Navbar loginHandle={loginHandle} />
+      <Navbar />
       <StyledBoard>
         {titles.map((title, index) => (
           <Column

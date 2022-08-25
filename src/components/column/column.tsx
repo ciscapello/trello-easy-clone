@@ -4,6 +4,7 @@ import { ICard } from "../../types";
 import { CardPopup } from "../../components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setCardState, showAddCardPopup, titleUpdate } from "../../store";
+import { useForm } from "react-hook-form";
 
 interface ColumnProps {
   cards: ICard[];
@@ -15,14 +16,20 @@ export default function Column({ cards, id }: ColumnProps) {
   const titles = useAppSelector((state) => state.titles);
   const cardState = useAppSelector((state) => state.popups.cardState);
 
-  const handleBlur = (event: { target: HTMLInputElement }) => {
-    let newTitle = event.target.value;
+  const { register, watch } = useForm({
+    defaultValues: {
+      title: titles[id],
+    },
+  });
+
+  const handleTitle = () => {
+    let newTitle = watch().title;
     dispatch(titleUpdate({ id, newTitle }));
   };
 
   return (
     <StyledColumn>
-      <Input defaultValue={titles[id]} onBlur={(event) => handleBlur(event)} />
+      <Input {...register("title")} onBlur={handleTitle} />
       <hr />
       {cards.map((card, i) => (
         <Card key={card.id} onClick={() => dispatch(setCardState(card))}>
@@ -36,7 +43,7 @@ export default function Column({ cards, id }: ColumnProps) {
           <Author> {card.author} </Author>
         </Card>
       ))}
-      {cardState ? <CardPopup id={id} cardId={cardState.id} /> : null}
+      {cardState ? <CardPopup cardId={cardState.id} /> : null}
       <Button onClick={() => dispatch(showAddCardPopup())}>Add new card</Button>
     </StyledColumn>
   );

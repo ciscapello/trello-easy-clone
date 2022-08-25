@@ -1,19 +1,20 @@
 import React from "react";
 import styled from "styled-components";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { setUserName } from "../../store";
 
-export interface NavbarProps {
-  loginHandle: () => void;
-}
+export default function Navbar() {
+  const dispatch = useAppDispatch();
 
-export default function Navbar({ loginHandle }: NavbarProps) {
   const handleClick = () => {
-    localStorage.removeItem("username");
-    loginHandle();
+    dispatch(setUserName(""));
   };
+
+  let username = useAppSelector((state) => state.popups.username);
 
   return (
     <Nav>
-      <Author>{localStorage.getItem("username") || null}</Author>
+      <Author>{username}</Author>
       <form>
         <Button onClick={handleClick}>Log Out</Button>
       </form>

@@ -1,18 +1,24 @@
 import React, { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import styled from "styled-components";
+import { useAppDispatch } from "../../hooks";
+import { setUserName } from "../../store";
+
+type FormValues = {
+  name: string;
+};
 
 export default function Popup() {
-  const [name, setName] = useState("");
+  const dispatch = useAppDispatch();
   let [showPopup, setShowPopup] = useState(true);
 
-  const handleClick = (event: React.SyntheticEvent) => {
-    localStorage.setItem("username", name);
-    setName(() => "");
-    setShowPopup(() => (showPopup = !showPopup));
-  };
+  const { register, handleSubmit, reset } = useForm<FormValues>();
 
-  const changeHandler = (event: { target: HTMLInputElement }) => {
-    setName(() => event.target.value);
+  const handleClick: SubmitHandler<FormValues> = (data) => {
+    localStorage.setItem("username", data.name);
+    dispatch(setUserName(data.name));
+    reset();
+    setShowPopup(() => (showPopup = !showPopup));
   };
 
   return (
@@ -20,12 +26,8 @@ export default function Popup() {
       <PopupContent>
         <form>
           <H2>Пожалуйста, введите ваше имя</H2>
-          <Input
-            value={name}
-            onChange={(event) => changeHandler(event)}
-            type="text"
-          />
-          <Button onClick={(event) => handleClick(event)}>OK</Button>
+          <Input {...register("name")} type="text" />
+          <Button onClick={handleSubmit(handleClick)}>OK</Button>
         </form>
       </PopupContent>
     </PopupContainer>

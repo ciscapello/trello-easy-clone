@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useAppDispatch } from "../../hooks/redux";
 import { deleteComment, updateComment } from "../../store";
@@ -11,19 +12,20 @@ export interface CommentProps {
 
 export default function Comment({ comment, card }: CommentProps) {
   const dispatch = useAppDispatch();
-  const [textField, setTextField] = useState(comment.text);
+
+  const { register, watch } = useForm({
+    defaultValues: {
+      comment: comment.text,
+    },
+  });
 
   const deleteHandler = (id: string) => {
     dispatch(deleteComment({ card, id }));
   };
 
-  const changeHandler = (event: { target: HTMLInputElement }) => {
-    setTextField(() => event.target.value);
-  };
-
   const blurHandler = () => {
     const commentId = comment.id;
-    const newText = textField;
+    const newText = watch().comment;
     dispatch(updateComment({ card, commentId, newText }));
   };
 
@@ -33,11 +35,7 @@ export default function Comment({ comment, card }: CommentProps) {
         <Author>{comment.author}</Author>
         <Delete onClick={() => deleteHandler(comment.id)}>X</Delete>
       </HeadContainer>
-      <CommentInput
-        value={textField}
-        onChange={changeHandler}
-        onBlur={blurHandler}
-      />
+      <CommentInput {...register("comment")} onBlur={blurHandler} />
     </CommentField>
   );
 }

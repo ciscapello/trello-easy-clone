@@ -14,6 +14,7 @@ export {
   hideAddCardPopup,
   setCardState,
   resetCardState,
+  setUserName,
 } from "./popups/popupsSlice";
 
 export { titleUpdate } from "./titles/titlesSlice";

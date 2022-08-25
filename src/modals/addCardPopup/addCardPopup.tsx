@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { PopupContainer, PopupContent } from "../popup/popup";
 import styled from "styled-components";
 import {
@@ -8,34 +8,37 @@ import {
   useAppSelector,
 } from "../../hooks";
 import { hideAddCardPopup, addCard } from "../../store";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+type FormValues = {
+  title: string;
+  text: string;
+  status: string;
+};
 
 export default function AddCardPopup() {
   const dispatch = useAppDispatch();
   const titles = useAppSelector((state) => state.titles);
 
-  const [title, setTitle] = useState("");
-  const [text, setText] = useState("");
-  const [status, setStatus] = useState("0");
+  const {
+    register,
+    watch,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty },
+  } = useForm<FormValues>();
 
-  const changeTitle = (event: { target: HTMLInputElement }) => {
-    setTitle(() => event.target.value);
-  };
+  console.log("errors", errors);
+  console.log("dirty", isDirty);
 
-  const changeText = (event: { target: HTMLTextAreaElement }) => {
-    setText(() => event.target.value);
-  };
+  console.log(watch("title"));
 
-  const changeStatus = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatus(() => event.target.value);
-  };
-
-  const handleClick = (event: React.SyntheticEvent) => {
-    event.preventDefault();
+  const handleClick: SubmitHandler<FormValues> = (data) => {
+    const { title, text, status } = data;
     dispatch(addCard({ title, text, status }));
-    setTitle("");
-    setText("");
-    setStatus("0");
+    reset();
     dispatch(hideAddCardPopup());
+    console.log(data);
   };
 
   useEscape(() => dispatch(hideAddCardPopup()));
@@ -54,24 +57,25 @@ export default function AddCardPopup() {
         <h3>Add new card</h3>
         <Form>
           <Title
+            {...register("title", { required: true })}
             type="text"
             placeholder="Title"
-            value={title}
-            onChange={(event) => changeTitle(event)}
           />
-          <Text
-            placeholder="Text"
-            value={text}
-            onChange={(event) => changeText(event)}
-          />
-          <Select name="select" value={status} onChange={changeStatus}>
+          {errors.title?.type === "required" ? (
+            <ErrorMessage>Title is required</ErrorMessage>
+          ) : null}
+          <Text {...register("text", { required: true })} placeholder="Text" />
+          {errors.text?.type === "required" ? (
+            <ErrorMessage>Text field id required</ErrorMessage>
+          ) : null}
+          <Select {...register("status")}>
             {titles.map((title, i) => (
               <option key={i} value={i}>
                 {title}
               </option>
             ))}
           </Select>
-          <Button onClick={handleClick}>Add</Button>
+          <Button onClick={handleSubmit(handleClick)}>Add</Button>
         </Form>
       </PopupContent>
     </PopupContainer>
@@ -125,4 +129,8 @@ const CloseButton = styled.button`
   }
   position: absolute;
   right: 604px;
+`;
+
+const ErrorMessage = styled.small`
+  color: red;
 `;

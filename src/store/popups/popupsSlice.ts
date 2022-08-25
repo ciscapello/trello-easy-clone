@@ -5,12 +5,14 @@ interface InitialState {
   addCardPopup: boolean;
   cardPopup: boolean;
   cardState: ICard | undefined;
+  username: string;
 }
 
 const initialState: InitialState = {
   addCardPopup: false,
   cardPopup: false,
   cardState: undefined,
+  username: "",
 };
 
 const titlesSlice = createSlice({
@@ -35,6 +37,9 @@ const titlesSlice = createSlice({
     resetCardState: (state) => {
       state.cardState = undefined;
     },
+    setUserName: (state, action: PayloadAction<string>) => {
+      state.username = action.payload;
+    },
   },
 });
 
@@ -45,5 +50,6 @@ export const {
   hideAddCardPopup,
   setCardState,
   resetCardState,
+  setUserName,
 } = titlesSlice.actions;
 export default titlesSlice.reducer;
