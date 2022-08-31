@@ -23,7 +23,7 @@ export default function CardPopup({ cardId }: CardPopupProps) {
 
   const cards = useAppSelector((state) => state.cards.cards);
 
-  const titles = useAppSelector((state) => state.titles);
+  const titles = useAppSelector((state) => state.cards.titles);
 
   const card = cards.find((elem) => elem.id === cardId);
 

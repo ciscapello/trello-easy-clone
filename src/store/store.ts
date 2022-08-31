@@ -13,11 +13,9 @@ import {
 
 import cardsSlice from "./cards/cardsSlice";
 import popupsSlice from "./popups/popupsSlice";
-import titlesSlice from "./titles/titlesSlice";
 
 const rootReducer = combineReducers({
   cards: cardsSlice,
-  titles: titlesSlice,
   popups: popupsSlice,
 });
 

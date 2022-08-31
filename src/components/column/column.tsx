@@ -13,7 +13,7 @@ interface ColumnProps {
 
 export default function Column({ cards, id }: ColumnProps) {
   const dispatch = useAppDispatch();
-  const titles = useAppSelector((state) => state.titles);
+  const titles = useAppSelector((state) => state.cards.titles);
   const cardState = useAppSelector((state) => state.popups.cardState);
 
   const { register, watch } = useForm({

@@ -18,7 +18,7 @@ type FormValues = {
 
 export default function AddCardPopup() {
   const dispatch = useAppDispatch();
-  const titles = useAppSelector((state) => state.titles);
+  const titles = useAppSelector((state) => state.cards.titles);
 
   const {
     register,

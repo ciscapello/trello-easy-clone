@@ -4,12 +4,7 @@ import { createGlobalStyle } from "styled-components";
 import { useAppSelector } from "./hooks";
 
 function App() {
-  // const [login, setLogin] = useState(Boolean(localStorage.getItem("username")));
   const login = useAppSelector((state) => state.popups.username);
-
-  // const loginHandle = () => {
-  //   setLogin(false);
-  // };
 
   return (
     <>

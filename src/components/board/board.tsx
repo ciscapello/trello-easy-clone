@@ -5,7 +5,7 @@ import { AddCardPopup, Navbar, Column } from "..";
 import { useAppSelector } from "../../hooks";
 
 export default function Board() {
-  const titles = useAppSelector((state) => state.titles);
+  const { titles } = useAppSelector((state) => state.cards);
 
   const isShow = useAppSelector((state) => state.popups.addCardPopup);
 

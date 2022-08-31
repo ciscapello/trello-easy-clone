@@ -5,6 +5,7 @@ export {
   deleteCard,
   deleteComment,
   updateComment,
+  titleUpdate,
 } from "./cards/cardsSlice";
 
 export {
@@ -16,5 +17,3 @@ export {
   resetCardState,
   setUserName,
 } from "./popups/popupsSlice";
-
-export { titleUpdate } from "./titles/titlesSlice";
