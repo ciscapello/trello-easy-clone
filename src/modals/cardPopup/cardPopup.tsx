@@ -6,6 +6,7 @@ import { CardComments } from "../../components";
 import { ICard } from "../../types";
 import { deleteCard, updateCard, resetCardState } from "../../store";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { selectAllCards, selectAllTitles } from "../../store/cards/selectors";
 
 export interface CardPopupProps {
   cardId: string;
@@ -21,9 +22,8 @@ export default function CardPopup({ cardId }: CardPopupProps) {
   const dispatch = useAppDispatch();
   useEscape(() => dispatch(resetCardState()));
 
-  const cards = useAppSelector((state) => state.cards.cards);
-
-  const titles = useAppSelector((state) => state.cards.titles);
+  const cards = useAppSelector(selectAllCards);
+  const titles = useAppSelector(selectAllTitles);
 
   const card = cards.find((elem) => elem.id === cardId);
 

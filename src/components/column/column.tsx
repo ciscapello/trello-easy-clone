@@ -3,18 +3,20 @@ import styled from "styled-components";
 import { ICard } from "../../types";
 import { CardPopup } from "../../components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setCardState, showAddCardPopup, titleUpdate } from "../../store";
+import { setCardState, titleUpdate } from "../../store";
 import { useForm } from "react-hook-form";
+import { selectAllTitles, selectCardState } from "../../store/cards/selectors";
 
 interface ColumnProps {
   cards: ICard[];
   id: number;
+  showCard: () => void;
 }
 
-export default function Column({ cards, id }: ColumnProps) {
+export default function Column({ showCard, cards, id }: ColumnProps) {
   const dispatch = useAppDispatch();
-  const titles = useAppSelector((state) => state.cards.titles);
-  const cardState = useAppSelector((state) => state.popups.cardState);
+  const titles = useAppSelector(selectAllTitles);
+  const cardState = useAppSelector(selectCardState);
 
   const { register, watch } = useForm({
     defaultValues: {
@@ -44,7 +46,7 @@ export default function Column({ cards, id }: ColumnProps) {
         </Card>
       ))}
       {cardState ? <CardPopup cardId={cardState.id} /> : null}
-      <Button onClick={() => dispatch(showAddCardPopup())}>Add new card</Button>
+      <Button onClick={() => showCard()}>Add new card</Button>
     </StyledColumn>
   );
 }

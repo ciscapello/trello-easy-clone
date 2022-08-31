@@ -12,11 +12,9 @@ import {
 } from "redux-persist";
 
 import cardsSlice from "./cards/cardsSlice";
-import popupsSlice from "./popups/popupsSlice";
 
 const rootReducer = combineReducers({
   cards: cardsSlice,
-  popups: popupsSlice,
 });
 
 const persistConfig = {

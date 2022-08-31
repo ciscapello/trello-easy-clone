@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ICard } from "../../types";
 import { v4 as uuidv4 } from "uuid";
 import {
-  CardState,
+  ICardState,
   IAddCard,
   IAddComment,
   IDeleteComment,
@@ -10,10 +10,11 @@ import {
   TitleUpdateAction,
 } from "./types";
 
-let initialState: CardState = {
+let initialState: ICardState = {
   cards: [],
   username: "",
   titles: ["TODO", "In Progress", "Testing", "Done"],
+  cardState: undefined,
 };
 
 const cardsSlice = createSlice({
@@ -95,8 +96,14 @@ const cardsSlice = createSlice({
       const { newTitle, id } = action.payload;
       state.titles[id] = newTitle;
     },
-    updateUser: (state, action: PayloadAction<string>) => {
+    setUserName: (state, action: PayloadAction<string>) => {
       state.username = action.payload;
+    },
+    setCardState: (state, action: PayloadAction<ICard>) => {
+      state.cardState = action.payload;
+    },
+    resetCardState: (state) => {
+      state.cardState = undefined;
     },
   },
 });
@@ -109,6 +116,8 @@ export const {
   deleteComment,
   updateComment,
   titleUpdate,
-  updateUser,
+  setUserName,
+  setCardState,
+  resetCardState,
 } = cardsSlice.actions;
 export default cardsSlice.reducer;

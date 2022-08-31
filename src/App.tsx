@@ -2,9 +2,10 @@ import React from "react";
 import { Popup, Board } from "./components";
 import { createGlobalStyle } from "styled-components";
 import { useAppSelector } from "./hooks";
+import { selectUsername } from "./store/cards/selectors";
 
 function App() {
-  const login = useAppSelector((state) => state.popups.username);
+  const login = useAppSelector(selectUsername);
 
   return (
     <>

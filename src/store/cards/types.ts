@@ -1,9 +1,10 @@
 import { ICard, IComment } from "../../types";
 
-export interface CardState {
+export interface ICardState {
   cards: ICard[];
   username: string;
   titles: string[];
+  cardState: ICard | undefined;
 }
 
 export interface IAddComment {

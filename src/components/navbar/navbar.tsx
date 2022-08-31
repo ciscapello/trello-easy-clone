@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { setUserName } from "../../store";
+import { selectUsername } from "../../store/cards/selectors";
 
 export default function Navbar() {
   const dispatch = useAppDispatch();
@@ -10,7 +11,7 @@ export default function Navbar() {
     dispatch(setUserName(""));
   };
 
-  let username = useAppSelector((state) => state.popups.username);
+  let username = useAppSelector(selectUsername);
 
   return (
     <Nav>

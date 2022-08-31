@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Comment } from "../../components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addComment } from "../../store";
+import { selectUsername } from "../../store/cards/selectors";
 import { ICard, IComment } from "../../types";
 
 export interface CardCommentsProps {
@@ -28,7 +29,7 @@ export default function CardComments({
 
   let field = watch();
 
-  const { username } = useAppSelector((state) => state.cards);
+  const username = useAppSelector(selectUsername);
 
   const commentsHandler: SubmitHandler<FieldValues> = (data) => {
     const newComment = {

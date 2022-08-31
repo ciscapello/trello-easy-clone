@@ -7,8 +7,9 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../hooks";
-import { hideAddCardPopup, addCard } from "../../store";
+import { addCard } from "../../store";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { selectAllTitles } from "../../store/cards/selectors";
 
 type FormValues = {
   title: string;
@@ -16,35 +17,32 @@ type FormValues = {
   status: string;
 };
 
-export default function AddCardPopup() {
+interface AddCardPopupProps {
+  hideCard: () => void;
+}
+
+export default function AddCardPopup({ hideCard }: AddCardPopupProps) {
   const dispatch = useAppDispatch();
-  const titles = useAppSelector((state) => state.cards.titles);
+  const titles = useAppSelector(selectAllTitles);
 
   const {
     register,
-    watch,
     handleSubmit,
     reset,
-    formState: { errors, isDirty },
+    formState: { errors },
   } = useForm<FormValues>();
-
-  console.log("errors", errors);
-  console.log("dirty", isDirty);
-
-  console.log(watch("title"));
 
   const handleClick: SubmitHandler<FormValues> = (data) => {
     const { title, text, status } = data;
     dispatch(addCard({ title, text, status }));
     reset();
-    dispatch(hideAddCardPopup());
-    console.log(data);
+    hideCard();
   };
 
-  useEscape(() => dispatch(hideAddCardPopup()));
+  useEscape(() => hideCard());
 
   const closePopup = () => {
-    dispatch(hideAddCardPopup());
+    hideCard();
   };
 
   const ref = useRef(null);
