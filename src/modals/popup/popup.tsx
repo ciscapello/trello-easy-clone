@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useAppDispatch } from "../../hooks";
-import { setUserName } from "../../store";
+import { setUserName } from "../../store/root";
 
 type FormValues = {
   name: string;

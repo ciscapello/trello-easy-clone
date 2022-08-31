@@ -3,12 +3,10 @@ import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { AddCardPopup, Navbar, Column } from "..";
 import { useAppSelector } from "../../hooks";
-import { selectAllCards, selectAllTitles } from "../../store/cards/selectors";
+import { selectAllCards, selectAllTitles } from "../../store/root";
 
 export default function Board() {
   const titles = useAppSelector(selectAllTitles);
-
-  // const isShow = useAppSelector((state) => state.popups.addCardPopup);
 
   const [isShow, setIsShow] = useState(false);
 

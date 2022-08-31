@@ -18,7 +18,7 @@ let initialState: ICardState = {
 };
 
 const cardsSlice = createSlice({
-  name: "cards",
+  name: "root",
   initialState,
   reducers: {
     addCard: (state, action: PayloadAction<IAddCard>) => {

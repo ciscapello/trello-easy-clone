@@ -7,9 +7,8 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../hooks";
-import { addCard } from "../../store";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { selectAllTitles } from "../../store/cards/selectors";
+import { selectAllTitles, addCard } from "../../store/root";
 
 type FormValues = {
   title: string;

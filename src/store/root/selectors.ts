@@ -1,17 +1,17 @@
 import { RootState } from "../store";
 
 export const selectAllTitles = (state: RootState) => {
-  return state.cards.titles;
+  return state.root.titles;
 };
 
 export const selectAllCards = (state: RootState) => {
-  return state.cards.cards;
+  return state.root.cards;
 };
 
 export const selectUsername = (state: RootState) => {
-  return state.cards.username;
+  return state.root.username;
 };
 
 export const selectCardState = (state: RootState) => {
-  return state.cards.cardState;
+  return state.root.cardState;
 };

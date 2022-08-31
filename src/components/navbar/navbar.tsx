@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setUserName } from "../../store";
-import { selectUsername } from "../../store/cards/selectors";
+import { selectUsername, setUserName } from "../../store/root";
 
 export default function Navbar() {
   const dispatch = useAppDispatch();

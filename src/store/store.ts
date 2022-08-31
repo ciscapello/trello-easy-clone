@@ -11,10 +11,10 @@ import {
   REGISTER,
 } from "redux-persist";
 
-import cardsSlice from "./cards/cardsSlice";
+import rootSlice from "./root/rootSlice";
 
 const rootReducer = combineReducers({
-  cards: cardsSlice,
+  root: rootSlice,
 });
 
 const persistConfig = {

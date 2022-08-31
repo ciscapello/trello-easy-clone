@@ -3,9 +3,13 @@ import styled from "styled-components";
 import { ICard } from "../../types";
 import { CardPopup } from "../../components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { setCardState, titleUpdate } from "../../store";
 import { useForm } from "react-hook-form";
-import { selectAllTitles, selectCardState } from "../../store/cards/selectors";
+import {
+  selectAllTitles,
+  selectCardState,
+  setCardState,
+  titleUpdate,
+} from "../../store/root";
 
 interface ColumnProps {
   cards: ICard[];
@@ -45,7 +49,7 @@ export default function Column({ showCard, cards, id }: ColumnProps) {
           <Author> {card.author} </Author>
         </Card>
       ))}
-      {cardState ? <CardPopup cardId={cardState.id} /> : null}
+      {cardState && <CardPopup cardId={cardState.id} />}
       <Button onClick={() => showCard()}>Add new card</Button>
     </StyledColumn>
   );

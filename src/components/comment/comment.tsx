@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useAppDispatch } from "../../hooks/redux";
-import { deleteComment, updateComment } from "../../store";
+import { deleteComment, updateComment } from "../../store/root";
 import { ICard, IComment } from "../../types";
 
 export interface CommentProps {

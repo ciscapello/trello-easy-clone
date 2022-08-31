@@ -4,8 +4,7 @@ import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { Comment } from "../../components";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { addComment } from "../../store";
-import { selectUsername } from "../../store/cards/selectors";
+import { selectUsername, addComment } from "../../store/root";
 import { ICard, IComment } from "../../types";
 
 export interface CardCommentsProps {

@@ -4,9 +4,14 @@ import styled from "styled-components";
 import { useEscape, useAppDispatch, useAppSelector } from "../../hooks";
 import { CardComments } from "../../components";
 import { ICard } from "../../types";
-import { deleteCard, updateCard, resetCardState } from "../../store";
+import {
+  deleteCard,
+  updateCard,
+  resetCardState,
+  selectAllCards,
+  selectAllTitles,
+} from "../../store/root";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { selectAllCards, selectAllTitles } from "../../store/cards/selectors";
 
 export interface CardPopupProps {
   cardId: string;
@@ -56,21 +61,21 @@ export default function CardPopup({ cardId }: CardPopupProps) {
 
   const ref = useRef(null);
 
-  return (
+  return card ? (
     <PopupContainer display>
       <StyledPopupContent ref={ref}>
         <Container>
           <CloseButton onClick={(event) => clickHandler(event)}>X</CloseButton>
-          <small>{card!.author}</small>
+          <small>{card.author}</small>
           <hr />
           <br />
           <Form>
             <Delete type="button" onClick={(event) => deleteHandler(event)}>
               Delete card
             </Delete>
-            <Input defaultValue={card!.title} {...register("title")} />
-            <Textarea defaultValue={card!.text} {...register("text")} />
-            <Select defaultValue={card!.status} {...register("status")}>
+            <Input defaultValue={card.title} {...register("title")} />
+            <Textarea defaultValue={card.text} {...register("text")} />
+            <Select defaultValue={card.status} {...register("status")}>
               {titles.map((title, i) => (
                 <option key={i} value={i}>
                   {title}
@@ -83,9 +88,11 @@ export default function CardPopup({ cardId }: CardPopupProps) {
           </Form>
           <hr />
         </Container>
-        <CardComments card={card!} comments={card!.comments} id={card!.id} />
+        <CardComments card={card} comments={card.comments} id={card.id} />
       </StyledPopupContent>
     </PopupContainer>
+  ) : (
+    <></>
   );
 }
 
