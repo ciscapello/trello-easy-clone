@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useAppDispatch } from "../../hooks";
 import { setUserName } from "../../store";
+import { updateUser } from "../../store/cards/cardsSlice";
 
 type FormValues = {
   name: string;
@@ -15,7 +16,7 @@ export default function Popup() {
   const { register, handleSubmit, reset } = useForm<FormValues>();
 
   const handleClick: SubmitHandler<FormValues> = (data) => {
-    localStorage.setItem("username", data.name);
+    dispatch(updateUser(data.name));
     dispatch(setUserName(data.name));
     reset();
     setShowPopup(() => (showPopup = !showPopup));

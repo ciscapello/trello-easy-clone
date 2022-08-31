@@ -27,7 +27,7 @@ const cardsSlice = createSlice({
           id: uuidv4(),
           title: title,
           text: text,
-          author: localStorage.getItem("username"),
+          author: state.username,
           status: Number(status),
           comments: [],
         };
@@ -95,6 +95,9 @@ const cardsSlice = createSlice({
       const { newTitle, id } = action.payload;
       state.titles[id] = newTitle;
     },
+    updateUser: (state, action: PayloadAction<string>) => {
+      state.username = action.payload;
+    },
   },
 });
 
@@ -106,5 +109,6 @@ export const {
   deleteComment,
   updateComment,
   titleUpdate,
+  updateUser,
 } = cardsSlice.actions;
 export default cardsSlice.reducer;

@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import { Comment } from "../../components";
-import { useAppDispatch } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import { addComment } from "../../store";
 import { ICard, IComment } from "../../types";
 
@@ -28,10 +28,12 @@ export default function CardComments({
 
   let field = watch();
 
+  const { username } = useAppSelector((state) => state.cards);
+
   const commentsHandler: SubmitHandler<FieldValues> = (data) => {
     const newComment = {
       id: uuidv4(),
-      author: localStorage.getItem("username"),
+      author: username,
       text: data.comment,
     };
     dispatch(addComment({ newComment, id }));
