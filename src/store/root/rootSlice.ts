@@ -2,13 +2,19 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ICard } from "../../types";
 import { v4 as uuidv4 } from "uuid";
 import {
-  ICardState,
   IAddCard,
   IAddComment,
   IDeleteComment,
   IUpdateComment,
   TitleUpdateAction,
 } from "./types";
+
+export interface ICardState {
+  cards: ICard[];
+  username: string;
+  titles: string[];
+  cardState: ICard | undefined;
+}
 
 let initialState: ICardState = {
   cards: [],
@@ -17,7 +23,7 @@ let initialState: ICardState = {
   cardState: undefined,
 };
 
-const cardsSlice = createSlice({
+const rootSlice = createSlice({
   name: "root",
   initialState,
   reducers: {
@@ -119,5 +125,5 @@ export const {
   setUserName,
   setCardState,
   resetCardState,
-} = cardsSlice.actions;
-export default cardsSlice.reducer;
+} = rootSlice.actions;
+export default rootSlice.reducer;
